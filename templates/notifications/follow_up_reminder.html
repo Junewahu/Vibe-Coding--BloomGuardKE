@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Follow-Up Reminder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Follow-Up Appointment Reminder</h1>
+    </div>
+    <div class="content">
+        <p>Dear {{ patient_name }},</p>
+        
+        <p>This is a reminder about your upcoming follow-up appointment:</p>
+        
+        <ul>
+            <li><strong>Date:</strong> {{ scheduled_date.strftime('%B %d, %Y') }}</li>
+            <li><strong>Time:</strong> {{ scheduled_date.strftime('%I:%M %p') }}</li>
+            <li><strong>Duration:</strong> {{ duration_minutes }} minutes</li>
+            <li><strong>Type:</strong> {{ follow_up_type }}</li>
+            {% if doctor_name %}
+            <li><strong>Doctor:</strong> {{ doctor_name }}</li>
+            {% endif %}
+        </ul>
+
+        {% if notes %}
+        <p><strong>Additional Notes:</strong><br>
+        {{ notes }}</p>
+        {% endif %}
+
+        <p>Please arrive 10 minutes before your scheduled time.</p>
+
+        <a href="{{ reschedule_link }}" class="button">Reschedule Appointment</a>
+        <a href="{{ cancel_link }}" class="button" style="background-color: #f44336;">Cancel Appointment</a>
+    </div>
+    <div class="footer">
+        <p>This is an automated message from BloomGuard. Please do not reply to this email.</p>
+        <p>If you need to contact us, please call {{ support_phone }} or email {{ support_email }}.</p>
+    </div>
+</body>
+</html> 

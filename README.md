@@ -1,210 +1,134 @@
-# BloomGuard - Modular Health Platform
+# BloomGuard - Pediatric HealthTech Platform
 
-BloomGuard is a modular, human-centred B2B healthtech platform targeting paediatric clinics and private doctors in Kenya. It automates follow-up reminders for vaccinations and developmental milestones through WhatsApp, SMS, USSD, and voice. The system enhances clinic efficiency, caregiver engagement, and child health outcomes while supporting offline functionality, multilingual delivery, tiered monetisation, and integration with national systems like NHIF.
+A modern, accessible, and engaging UI for BloomGuard, a pediatric healthtech platform targeting private clinics and caregivers in Kenya.
 
-## Features
+## Design Philosophy
 
-### Core Modules
+BloomGuard's UI is designed to be:
+- **Playful yet Professional**: Warm, inviting interface that maintains medical credibility
+- **Accessible**: High contrast, clear typography, and responsive design
+- **Multilingual**: Support for English and Swahili with easy language switching
+- **Mobile-First**: Optimized for both mobile and web platforms
+- **Offline-Capable**: Progressive Web App with offline functionality
 
-1. **Patient Registration & Profiling**
-   - Manual entry and bulk import
-   - Demographics and contact tracking
-   - Caregiver linking
-   - Medical history management
-   - Biometric ID integration
-   - Photo capture for patient cards
+## Color Palette
 
-2. **Follow-Up Scheduling Engine**
-   - Rule-based scheduling
-   - Immunisation tracking
-   - Milestone monitoring
-   - Post-operative visit management
-   - Chronic care scheduling
-   - Drag-and-drop calendar interface
+- Baby Blue: `#BDE0FE`
+- Candy Pink: `#FFAFCC`
+- Lavender: `#CDB4DB`
+- Sky Blue: `#A2D2FF`
+- Deep Navy: `#22223B` (Text)
+- White: `#FFFFFF` (Background)
 
-3. **Reminder Dispatch Hub**
-   - Multi-channel delivery (SMS, WhatsApp, Voice, USSD)
-   - Customisable message templates
-   - Intelligent retry system
-   - Multilingual support
-   - SIM health monitoring
+## Key Features
 
-4. **Response Tracking & Confirmation**
-   - Two-way communication
-   - Appointment confirmation
-   - Rescheduling interface
-   - Non-responder flagging
-   - FAQ chatbot
+### 1. Modular Components
+- `BloomCard`: Reusable card component with status indicators and animations
+- `BloomLayout`: Responsive layout with navigation and theme switching
+- Custom form components with validation
+- Status indicators and microinteractions
 
-5. **Doctor & Staff Dashboard**
-   - Real-time patient tracking
-   - Appointment management
-   - Workload forecasting
-   - Analytics integration
-   - AI risk scoring
+### 2. Responsive Design
+- Mobile-first approach
+- Adaptive layouts for different screen sizes
+- Touch-friendly interface elements
 
-6. **Offline Sync & Backup**
-   - Android app support
-   - Data caching
-   - Sync queue management
-   - Manual override options
-   - Peer-to-peer sync
+### 3. Internationalization
+- English and Swahili language support
+- Easy language switching
+- Culturally appropriate content
 
-7. **Caregiver Engagement Interface**
-   - WhatsApp broadcasts
-   - Voice notes
-   - Printable visit cards
-   - Q&A system
-   - Digital vaccination certificates
-
-8. **CHW Field Tracker**
-   - Visit assignment
-   - Offline data entry
-   - GPS tagging
-   - Incentive tracking
-   - Supervisor review
-
-9. **Incentives & Adherence Module**
-   - Visit-based rewards
-   - Medication adherence tracking
-   - Milestone completion rewards
-   - Mobile money integration
-
-10. **Modular API Gateway**
-    - EMR integration
-    - NHIF connection
-    - Mobile money support
-    - Public health reporting
-    - Developer sandbox
-
-## Technical Architecture
-
-### Frontend Layer
-- React/Vue.js web interface
-- React Native mobile app
-- Offline-first design
-- Background sync
-- Role-based UI
-
-### Backend Layer
-- FastAPI microservices
-- PostgreSQL database
-- Redis caching
-- Docker containers
-- RESTful APIs
-
-### Data Layer
-- PostgreSQL for primary storage
-- Redis for caching
-- S3 for media storage
-- Local SQLite for offline
+### 4. Accessibility
+- WCAG 2.1 compliant
+- High contrast text
+- Screen reader support
+- Keyboard navigation
 
 ## Getting Started
 
 ### Prerequisites
-- Python 3.8+
-- PostgreSQL 12+
-- Redis 6+
-- Docker (optional)
+- Node.js (v14 or higher)
+- npm or yarn
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/bloomguard.git
-cd bloomguard
+git clone https://github.com/Junewahu/Vibe-Coding--BloomGuardKE.git
+cd Vibe-Coding--BloomGuardKE
 ```
 
-2. Create and activate virtual environment:
+2. Install dependencies:
 ```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+cd frontend
+npm install
 ```
 
-3. Install dependencies:
+3. Start the development server:
 ```bash
-pip install -r requirements.txt
+npm start
 ```
 
-4. Set up environment variables:
+### Building for Production
+
 ```bash
-cp .env.example .env
-# Edit .env with your configuration
+npm run build
 ```
 
-5. Initialize the database:
-```bash
-alembic upgrade head
+## Component Structure
+
+```
+src/
+├── components/
+│   ├── common/
+│   │   ├── BloomCard.tsx
+│   │   └── BloomButton.tsx
+│   ├── layout/
+│   │   └── BloomLayout.tsx
+│   └── forms/
+│       └── PatientForm.tsx
+├── theme/
+│   └── theme.ts
+├── i18n/
+│   └── config.ts
+└── pages/
+    ├── Dashboard.tsx
+    ├── PatientList.tsx
+    └── PatientProfile.tsx
 ```
 
-6. Run the development server:
-```bash
-uvicorn backend.main:app --reload
-```
+## Development Guidelines
 
-### Development
+### Code Style
+- Use TypeScript for type safety
+- Follow ESLint and Prettier configurations
+- Write meaningful component documentation
 
-1. Run tests:
-```bash
-pytest
-```
+### Component Development
+- Create reusable, modular components
+- Implement proper error handling
+- Add loading states and fallbacks
+- Include accessibility attributes
 
-2. Format code:
-```bash
-black .
-isort .
-```
-
-3. Type checking:
-```bash
-mypy .
-```
-
-4. Linting:
-```bash
-flake8
-```
-
-## API Documentation
-
-Once the server is running, visit:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
-
-## Deployment
-
-### Docker Deployment
-```bash
-docker-compose up -d
-```
-
-### Manual Deployment
-1. Set up PostgreSQL
-2. Configure environment variables
-3. Run migrations
-4. Start the server with gunicorn
+### Testing
+- Write unit tests for components
+- Test responsive behavior
+- Verify accessibility compliance
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For support, email support@bloomguard.ke or join our Slack channel.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
-- Ministry of Health, Kenya
-- NHIF
-- Africa's Talking
-- Twilio
-- OpenMRS 
+- Material-UI for the component library
+- i18next for internationalization
+- React community for best practices and patterns 

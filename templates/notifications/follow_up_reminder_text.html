@@ -1,0 +1,26 @@
+Follow-Up Appointment Reminder
+
+Dear {{ patient_name }},
+
+This is a reminder about your upcoming follow-up appointment:
+
+Date: {{ scheduled_date.strftime('%B %d, %Y') }}
+Time: {{ scheduled_date.strftime('%I:%M %p') }}
+Duration: {{ duration_minutes }} minutes
+Type: {{ follow_up_type }}
+{% if doctor_name %}
+Doctor: {{ doctor_name }}
+{% endif %}
+
+{% if notes %}
+Additional Notes:
+{{ notes }}
+{% endif %}
+
+Please arrive 10 minutes before your scheduled time.
+
+To reschedule your appointment, visit: {{ reschedule_link }}
+To cancel your appointment, visit: {{ cancel_link }}
+
+This is an automated message from BloomGuard. Please do not reply to this email.
+If you need to contact us, please call {{ support_phone }} or email {{ support_email }}. 

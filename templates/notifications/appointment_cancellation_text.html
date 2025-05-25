@@ -1,0 +1,20 @@
+Appointment Cancellation
+
+Dear {{ patient_name }},
+
+Your appointment has been cancelled:
+
+Date: {{ appointment_date }}
+Doctor: {{ doctor_name }}
+Reason: {{ reason }}
+
+{% if reschedule_info %}
+You can reschedule your appointment by:
+- Calling us at {{ phone_number }}
+- Visiting our website: {{ website_url }}
+- Using our mobile app
+{% endif %}
+
+If you have any questions, please don't hesitate to contact us.
+
+This is an automated message from BloomGuard. Please do not reply to this email. 

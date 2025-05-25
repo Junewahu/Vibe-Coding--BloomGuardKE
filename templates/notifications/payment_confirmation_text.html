@@ -1,0 +1,18 @@
+Payment Confirmation
+
+Dear {{ patient_name }},
+
+Thank you for your payment. Here are your payment details:
+
+Payment Details:
+- Invoice Number: #{{ invoice_number }}
+- Payment Date: {{ payment_date }}
+- Payment Method: {{ payment_method }}
+- Transaction ID: {{ transaction_id }}
+- Amount Paid: ${{ "%.2f"|format(payment_amount) }}
+
+Your payment has been successfully processed. A receipt has been generated and can be accessed through your BloomGuard account.
+
+If you have any questions about your payment, please contact our billing department.
+
+This is an automated message from BloomGuard. Please do not reply to this email. 
