@@ -1,0 +1,109 @@
+{
+  "common": {
+    "appName": "BloomGuard",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "sync": "Sync",
+    "offline": "Offline",
+    "online": "Online"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "rememberMe": "Remember Me"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to BloomGuard",
+    "stats": {
+      "totalPatients": "Total Patients",
+      "upcomingAppointments": "Upcoming Appointments",
+      "missedAppointments": "Missed Appointments",
+      "completedVisits": "Completed Visits"
+    },
+    "quickActions": {
+      "addPatient": "Add Patient",
+      "scheduleAppointment": "Schedule Appointment",
+      "sendReminder": "Send Reminder",
+      "generateReport": "Generate Report"
+    }
+  },
+  "patients": {
+    "title": "Patients",
+    "addPatient": "Add Patient",
+    "editPatient": "Edit Patient",
+    "patientDetails": "Patient Details",
+    "searchPatients": "Search Patients",
+    "filters": {
+      "age": "Age",
+      "gender": "Gender",
+      "status": "Status",
+      "lastVisit": "Last Visit"
+    },
+    "fields": {
+      "name": "Name",
+      "dob": "Date of Birth",
+      "gender": "Gender",
+      "contact": "Contact",
+      "address": "Address",
+      "caregiver": "Caregiver",
+      "medicalHistory": "Medical History"
+    }
+  },
+  "appointments": {
+    "title": "Appointments",
+    "schedule": "Schedule Appointment",
+    "reschedule": "Reschedule",
+    "cancel": "Cancel Appointment",
+    "status": {
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "missed": "Missed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "reminders": {
+    "title": "Reminders",
+    "send": "Send Reminder",
+    "templates": "Templates",
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "sms": "SMS",
+      "voice": "Voice Call",
+      "ussd": "USSD"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "clinic": "Clinic Settings",
+    "notifications": "Notifications",
+    "language": "Language",
+    "theme": "Theme",
+    "backup": "Backup & Restore",
+    "sync": "Sync Settings"
+  },
+  "errors": {
+    "offline": "You are currently offline. Changes will be synced when you're back online.",
+    "syncFailed": "Sync failed. Please try again.",
+    "networkError": "Network error. Please check your connection.",
+    "permissionDenied": "Permission denied.",
+    "invalidInput": "Invalid input. Please check your entries."
+  }
+} 

@@ -1,16 +1,17 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardActions, Typography, Box, Chip } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Card, CardContent, CardHeader, CardActions, Typography, Box, Chip, SxProps, Theme } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 
-interface BloomCardProps {
+export interface BloomCardProps {
   title?: string;
   subtitle?: string;
-  status?: 'success' | 'warning' | 'error' | 'info';
+  status?: 'info' | 'success' | 'warning' | 'error';
   syncStatus?: string;
   children: React.ReactNode;
   actions?: React.ReactNode;
   onClick?: () => void;
   elevation?: number;
+  sx?: SxProps<Theme>;
 }
 
 const StyledCard = styled(Card)<{ elevation?: number }>(({ theme, elevation = 1 }) => ({
@@ -55,7 +56,7 @@ const SyncChip = styled(Chip)(({ theme }) => ({
   },
 }));
 
-export const BloomCard: React.FC<BloomCardProps> = ({
+const BloomCard: React.FC<BloomCardProps> = ({
   title,
   subtitle,
   status,
@@ -64,9 +65,31 @@ export const BloomCard: React.FC<BloomCardProps> = ({
   actions,
   onClick,
   elevation,
+  sx,
 }) => {
+  const theme = useTheme();
+
+  const getStatusColor = () => {
+    switch (status) {
+      case 'success':
+        return theme.palette.status.success;
+      case 'warning':
+        return theme.palette.status.warning;
+      case 'error':
+        return theme.palette.status.error;
+      default:
+        return theme.palette.primary.main;
+    }
+  };
+
   return (
-    <StyledCard elevation={elevation} onClick={onClick}>
+    <StyledCard
+      elevation={elevation}
+      onClick={onClick}
+      sx={{
+        ...sx,
+      }}
+    >
       {(title || subtitle) && (
         <CardHeader
           title={
@@ -89,7 +112,34 @@ export const BloomCard: React.FC<BloomCardProps> = ({
           }
         />
       )}
-      <CardContent>{children}</CardContent>
+      <CardContent>
+        {title && (
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="h6" component="h2" gutterBottom>
+              {title}
+            </Typography>
+            {subtitle && (
+              <Typography variant="body2" color="text.secondary">
+                {subtitle}
+              </Typography>
+            )}
+          </Box>
+        )}
+        {children}
+        {syncStatus && (
+          <Box
+            sx={{
+              mt: 2,
+              pt: 2,
+              borderTop: `1px solid ${theme.palette.divider}`,
+            }}
+          >
+            <Typography variant="caption" color="text.secondary">
+              {syncStatus}
+            </Typography>
+          </Box>
+        )}
+      </CardContent>
       {actions && <CardActions>{actions}</CardActions>}
     </StyledCard>
   );

@@ -1,0 +1,63 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "appointments": "Appointments",
+    "reminders": "Reminders",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "language": "Language",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Name",
+    "rememberMe": "Remember Me",
+    "invalidCredentials": "Invalid email or password",
+    "passwordMismatch": "Passwords do not match",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "nameRequired": "Name is required"
+  },
+  "errors": {
+    "required": "{{field}} is required",
+    "invalidEmail": "Invalid email address",
+    "minLength": "{{field}} must be at least {{min}} characters",
+    "maxLength": "{{field}} must not exceed {{max}} characters",
+    "serverError": "Server error occurred",
+    "networkError": "Network error occurred",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "notFound": "Resource not found"
+  },
+  "validation": {
+    "email": "Please enter a valid email address",
+    "password": "Password must be at least 8 characters long",
+    "required": "This field is required",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must not exceed {{max}} characters",
+    "match": "Fields must match"
+  }
+} 

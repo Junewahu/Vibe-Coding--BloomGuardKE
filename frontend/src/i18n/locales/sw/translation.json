@@ -1,0 +1,23 @@
+{
+  "sync": {
+    "online": "Mtandaoni",
+    "offline": "Nje ya mtandao",
+    "pendingItems": "Vipengele {{count}} vinasubiri kusawazishwa",
+    "lastSync": "Sawazisho la mwisho: {{time}}",
+    "syncFailed": "Sawazisho limeshindwa",
+    "syncInProgress": "Inasawazisha...",
+    "retrySync": "Jaribu tena sawazisho",
+    "clearQueue": "Futa foleni ya sawazisho"
+  },
+  "form": {
+    "offlineWarning": "Huna uhusiano wa mtandao. Wasilisho lako litahifadhiwa na kutumwa unapopata uhusiano.",
+    "pendingSubmissions": "Wasilisho {{count}} vinasubiri",
+    "submitting": "Inatuma...",
+    "savingOffline": "Inahifadhi nje ya mtandao...",
+    "submit": "Wasilisha",
+    "cancel": "Ghairi",
+    "retry": "Jaribu tena",
+    "success": "Imetumwa kwa mafanikio",
+    "error": "Hitilafu imetokea"
+  }
+} 

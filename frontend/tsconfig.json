@@ -21,13 +21,17 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
     "paths": {
+      "@/*": ["*"],
       "@components/*": ["components/*"],
-      "@theme/*": ["theme/*"],
-      "@i18n/*": ["i18n/*"],
       "@pages/*": ["pages/*"],
       "@hooks/*": ["hooks/*"],
+      "@utils/*": ["utils/*"],
       "@services/*": ["services/*"],
-      "@types/*": ["types/*"]
+      "@assets/*": ["assets/*"],
+      "@styles/*": ["styles/*"],
+      "@types/*": ["types/*"],
+      "@context/*": ["context/*"],
+      "@constants/*": ["constants/*"]
     }
   },
   "include": [

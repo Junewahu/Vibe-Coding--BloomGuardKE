@@ -1,0 +1,67 @@
+{
+  "short_name": "BloomGuard",
+  "name": "BloomGuard - Maternal Health Management",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#BDE0FE",
+  "background_color": "#FFFFFF",
+  "orientation": "portrait",
+  "description": "A comprehensive maternal health management system for healthcare providers",
+  "categories": ["health", "medical", "productivity"],
+  "screenshots": [
+    {
+      "src": "screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Dashboard view of BloomGuard"
+    },
+    {
+      "src": "screenshots/patients.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Patient management interface"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Patient",
+      "short_name": "New Patient",
+      "description": "Add a new patient to the system",
+      "url": "/patients/new",
+      "icons": [{ "src": "icons/add-patient.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Schedule Appointment",
+      "short_name": "New Appointment",
+      "description": "Schedule a new appointment",
+      "url": "/appointments/new",
+      "icons": [{ "src": "icons/add-appointment.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "lang": "en-US",
+  "dir": "ltr"
+} 

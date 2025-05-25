@@ -1,0 +1,166 @@
+{
+  "common": {
+    "filter": "Filter",
+    "sync": "Sync",
+    "cancel": "Cancel",
+    "save": "Save",
+    "actions": "Actions"
+  },
+  "reminders": {
+    "title": "Reminders",
+    "addReminder": "Add Reminder",
+    "addNewReminder": "Add New Reminder",
+    "searchPlaceholder": "Search reminders...",
+    "patient": "Patient",
+    "type": "Type",
+    "dueDate": "Due Date",
+    "status": "Status",
+    "priority": "Priority",
+    "notificationMethod": "Notification Method",
+    "lastSent": "Last Sent",
+    "notes": "Notes",
+    "recurring": "Recurring Reminder",
+    "viewDetails": "View Details",
+    "edit": "Edit",
+    "resend": "Resend",
+    "markAsCompleted": "Mark as Completed",
+    "filterByStatus": "Filter by Status",
+    "filterByPriority": "Filter by Priority",
+    "filterByType": "Filter by Type",
+    "type": {
+      "vaccination": "Vaccination",
+      "checkup": "Checkup",
+      "medication": "Medication"
+    },
+    "status": {
+      "pending": "Pending",
+      "sent": "Sent",
+      "completed": "Completed"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "notificationMethod": {
+      "sms": "SMS",
+      "email": "Email",
+      "both": "SMS & Email"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "saveChanges": "Save Changes",
+    "settingsSaved": "Settings saved successfully",
+    "language": {
+      "title": "Language",
+      "select": "Select Language",
+      "english": "English",
+      "swahili": "Swahili"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "email": "Email Notifications",
+      "sms": "SMS Notifications",
+      "push": "Push Notifications",
+      "reminderTypes": "Reminder Types",
+      "appointmentReminders": "Appointment Reminders",
+      "medicationReminders": "Medication Reminders",
+      "vaccinationReminders": "Vaccination Reminders",
+      "reminderTime": "Reminder Time",
+      "reminderFrequency": "Reminder Frequency",
+      "frequency": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly"
+      }
+    },
+    "security": {
+      "title": "Security",
+      "twoFactorAuth": "Two-Factor Authentication",
+      "sessionTimeout": "Session Timeout",
+      "passwordExpiry": "Password Expiry",
+      "passwordComplexity": "Password Complexity",
+      "loginAttempts": "Maximum Login Attempts",
+      "minutes": "minutes",
+      "days": "days",
+      "attempts": "attempts",
+      "complexity": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
+    },
+    "sync": {
+      "title": "Sync & Storage",
+      "autoSync": "Auto Sync",
+      "syncInterval": "Sync Interval",
+      "offlineMode": "Offline Mode",
+      "dataRetention": "Data Retention Period",
+      "backupFrequency": "Backup Frequency",
+      "minutes": "minutes",
+      "days": "days",
+      "frequency": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly"
+      },
+      "online": "Online",
+      "offline": "Offline",
+      "pendingItems": "{{count}} items pending sync",
+      "lastSync": "Last sync: {{time}}",
+      "syncFailed": "Sync failed",
+      "syncInProgress": "Syncing...",
+      "retrySync": "Retry sync",
+      "clearQueue": "Clear sync queue"
+    },
+    "display": {
+      "title": "Display",
+      "darkMode": "Dark Mode",
+      "compactView": "Compact View",
+      "showAvatars": "Show Avatars",
+      "fontSize": "Font Size",
+      "contrast": "Contrast",
+      "size": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large"
+      },
+      "contrast": {
+        "normal": "Normal",
+        "high": "High",
+        "inverted": "Inverted"
+      }
+    },
+    "accessibility": {
+      "title": "Accessibility",
+      "highContrast": "High Contrast Mode",
+      "screenReader": "Screen Reader Support",
+      "reducedMotion": "Reduced Motion",
+      "textToSpeech": "Text to Speech"
+    },
+    "data": {
+      "title": "Data & Storage",
+      "dataUsage": "Data Usage",
+      "cacheSize": "Cache Size",
+      "autoClearCache": "Auto Clear Cache",
+      "exportFormat": "Export Format",
+      "usage": {
+        "low": "Low",
+        "normal": "Normal",
+        "high": "High"
+      }
+    }
+  },
+  "form": {
+    "offlineWarning": "You are currently offline. Your submission will be saved and sent when you're back online.",
+    "pendingSubmissions": "{{count}} submissions pending",
+    "submitting": "Submitting...",
+    "savingOffline": "Saving offline...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "success": "Successfully submitted",
+    "error": "An error occurred"
+  }
+} 

@@ -1,0 +1,64 @@
+{
+  "auth": {
+    "login": "Ingia",
+    "register": "Jisajili",
+    "forgotPassword": "Umesahau Nywila",
+    "resetPassword": "Weka Nywila Mpya",
+    "email": "Barua Pepe",
+    "password": "Nywila",
+    "confirmPassword": "Thibitisha Nywila",
+    "newPassword": "Nywila Mpya",
+    "currentPassword": "Nywila ya Sasa",
+    "rememberMe": "Nikumbuke",
+    "dontHaveAccount": "Huna akaunti?",
+    "alreadyHaveAccount": "Una akaunti?",
+    "backToLogin": "Rudi Kwenye Kuingia",
+    "forgotPasswordDescription": "Weka anwani yako ya barua pepe na tutakutumia maelekezo ya kuweka upya nywila yako.",
+    "resetEmailSent": "Barua Pepe ya Kuweka Upya Imetumwa",
+    "resetEmailInstructions": "Tafadhali angalia barua pepe yako kwa maelekezo ya kuweka upya nywila yako.",
+    "requestNewReset": "Omba Kiungo Kipya cha Kuweka Upya",
+    "invalidResetToken": "Kiungo cha Kuweka Upya Batili au Kimeisha",
+    "passwordResetSuccess": "Nywila imewekwa upya kwa mafanikio"
+  },
+  "errors": {
+    "pageNotFound": "Ukurasa Haupatikani",
+    "pageNotFoundDescription": "Ukurasa unaoutafuta haupo au umesogezwa.",
+    "backToHome": "Rudi Nyumbani",
+    "invalidCredentials": "Barua pepe au nywila batili",
+    "emailRequired": "Barua pepe inahitajika",
+    "passwordRequired": "Nywila inahitajika",
+    "passwordsDoNotMatch": "Nywila hazifanani",
+    "invalidEmail": "Anwani ya barua pepe batili",
+    "passwordTooShort": "Nywila lazima iwe na herufi 8 au zaidi",
+    "somethingWentWrong": "Kitu kimekwenda vibaya. Tafadhali jaribu tena."
+  },
+  "common": {
+    "loading": "Inapakia...",
+    "save": "Hifadhi",
+    "cancel": "Ghairi",
+    "delete": "Futa",
+    "edit": "Hariri",
+    "submit": "Wasilisha",
+    "back": "Rudi",
+    "next": "Endelea",
+    "search": "Tafuta",
+    "filter": "Chuja",
+    "sort": "Panga",
+    "noResults": "Hakuna matokeo yaliyopatikana",
+    "required": "Inahitajika"
+  },
+  "navigation": {
+    "dashboard": "Dashibodi",
+    "profile": "Wasifu",
+    "settings": "Mipangilio",
+    "logout": "Toka"
+  },
+  "validation": {
+    "required": "{{field}} inahitajika",
+    "minLength": "{{field}} lazima iwe na herufi {{min}} au zaidi",
+    "maxLength": "{{field}} lazima iwe na herufi {{max}} au chache",
+    "email": "Tafadhali weka anwani ya barua pepe halali",
+    "password": "Nywila lazima iwe na herufi 8 au zaidi na iwe na herufi kubwa moja, herufi ndogo moja, nambari moja, na herufi maalum moja",
+    "passwordMatch": "Nywila lazima zifanane"
+  }
+} 

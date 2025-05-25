@@ -1,0 +1,109 @@
+{
+  "common": {
+    "appName": "BloomGuard",
+    "loading": "Inapakia...",
+    "error": "Hitilafu",
+    "success": "Imefanikiwa",
+    "save": "Hifadhi",
+    "cancel": "Ghairi",
+    "delete": "Futa",
+    "edit": "Hariri",
+    "view": "Ona",
+    "search": "Tafuta",
+    "filter": "Chuja",
+    "sort": "Panga",
+    "refresh": "Sasisha",
+    "sync": "Sawazisha",
+    "offline": "Nje ya mtandao",
+    "online": "Mtandaoni"
+  },
+  "auth": {
+    "login": "Ingia",
+    "logout": "Toka",
+    "register": "Jisajili",
+    "forgotPassword": "Umesahau Nywila",
+    "resetPassword": "Weka Nywila Mpya",
+    "email": "Barua pepe",
+    "password": "Nywila",
+    "confirmPassword": "Thibitisha Nywila",
+    "rememberMe": "Nikumbuke"
+  },
+  "dashboard": {
+    "title": "Dashibodi",
+    "welcome": "Karibu kwenye BloomGuard",
+    "stats": {
+      "totalPatients": "Wagonjwa Wote",
+      "upcomingAppointments": "Mikutano Inayokuja",
+      "missedAppointments": "Mikutano Iliyopitwa",
+      "completedVisits": "Ziara Zilizokamilika"
+    },
+    "quickActions": {
+      "addPatient": "Ongeza Mgoniwa",
+      "scheduleAppointment": "Panga Mikutano",
+      "sendReminder": "Tuma Kumbusho",
+      "generateReport": "Tengeneza Ripoti"
+    }
+  },
+  "patients": {
+    "title": "Wagonjwa",
+    "addPatient": "Ongeza Mgoniwa",
+    "editPatient": "Hariri Mgoniwa",
+    "patientDetails": "Maelezo ya Mgoniwa",
+    "searchPatients": "Tafuta Wagonjwa",
+    "filters": {
+      "age": "Umri",
+      "gender": "Jinsia",
+      "status": "Hali",
+      "lastVisit": "Ziara ya Mwisho"
+    },
+    "fields": {
+      "name": "Jina",
+      "dob": "Tarehe ya Kuzaliwa",
+      "gender": "Jinsia",
+      "contact": "Mawasiliano",
+      "address": "Anwani",
+      "caregiver": "Mlezi",
+      "medicalHistory": "Historia ya Matibabu"
+    }
+  },
+  "appointments": {
+    "title": "Mikutano",
+    "schedule": "Panga Mikutano",
+    "reschedule": "Panga Upya",
+    "cancel": "Ghairi Mikutano",
+    "status": {
+      "scheduled": "Imeandaliwa",
+      "completed": "Imekamilika",
+      "missed": "Imepitwa",
+      "cancelled": "Imeghairiwa"
+    }
+  },
+  "reminders": {
+    "title": "Kumbusho",
+    "send": "Tuma Kumbusho",
+    "templates": "Vigezo",
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "sms": "SMS",
+      "voice": "Simu ya Sauti",
+      "ussd": "USSD"
+    }
+  },
+  "settings": {
+    "title": "Mipangilio",
+    "profile": "Wasifu",
+    "clinic": "Mipangilio ya Kliniki",
+    "notifications": "Arifa",
+    "language": "Lugha",
+    "theme": "Muonekano",
+    "backup": "Nakala ya Salio na Kurejesha",
+    "sync": "Mipangilio ya Kusawazisha"
+  },
+  "errors": {
+    "offline": "Huna uhusiano wa mtandao. Mabadiliko yatasawazishwa unaporudi mtandaoni.",
+    "syncFailed": "Kusawazisha hakukufaulu. Tafadhali jaribu tena.",
+    "networkError": "Hitilafu ya mtandao. Tafadhali angalia uhusiano wako.",
+    "permissionDenied": "Ruhusa imekataliwa.",
+    "invalidInput": "Ingizo batili. Tafadhali angalia maingizo yako."
+  }
+} 
