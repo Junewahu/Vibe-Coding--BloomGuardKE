@@ -97,5 +97,7 @@ export const useOfflineSync = () => {
     syncStatus,
     syncNow,
     offlineSync,
+    lastSyncTime: offlineSync.getLastSyncTime(),
+    syncQueue: offlineSync.getQueue(),
   };
 }; 

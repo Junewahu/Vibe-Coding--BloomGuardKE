@@ -10,7 +10,9 @@ import {
   useTheme,
 } from '@mui/material';
 
-export interface CardProps extends Omit<MuiCardProps, 'variant'> {
+type BaseCardProps = Omit<MuiCardProps, 'variant' | 'title'>;
+
+export interface CardProps extends BaseCardProps {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   headerAction?: React.ReactNode;

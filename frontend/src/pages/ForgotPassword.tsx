@@ -94,7 +94,7 @@ const ForgotPassword: React.FC = () => {
           ) : (
             <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
               <Typography variant="body2" sx={{ mb: 2 }}>
-                Enter your email address and we'll send you instructions to reset
+                Enter your email address and we&apos;ll send you instructions to reset
                 your password.
               </Typography>
 

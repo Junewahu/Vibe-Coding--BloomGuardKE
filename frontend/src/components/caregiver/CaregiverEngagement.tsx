@@ -3,42 +3,37 @@ import {
   Box,
   Button,
   Card,
-  Flex,
-  Heading,
+  CardContent,
+  Typography,
   Stack,
   Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Badge,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
   FormControl,
-  FormLabel,
-  Input,
+  InputLabel,
   Select,
-  Textarea,
-  useToast,
-  Spinner,
+  MenuItem,
   Grid,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  StatArrow,
-} from '@chakra-ui/react';
+  Paper,
+  IconButton,
+  Tooltip,
+  useTheme,
+  CircularProgress,
+} from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useParams } from 'react-router-dom';
 import { usePatientStore } from '../../stores/patientStore';
+import { useSnackbar } from 'notistack';
 
 interface Caregiver {
   id: string;
@@ -95,10 +90,10 @@ export const CaregiverEngagement: React.FC = () => {
     upcomingInteractions: 0,
     interactionTrend: 0,
   });
-
-  const { isOpen: isCaregiverModalOpen, onOpen: onCaregiverModalOpen, onClose: onCaregiverModalClose } = useDisclosure();
-  const { isOpen: isInteractionModalOpen, onOpen: onInteractionModalOpen, onClose: onInteractionModalClose } = useDisclosure();
-  const toast = useToast();
+  const [isCaregiverModalOpen, setIsCaregiverModalOpen] = useState(false);
+  const [isInteractionModalOpen, setIsInteractionModalOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
 
   const { register: registerCaregiver, handleSubmit: handleSubmitCaregiver, reset: resetCaregiver, formState: { errors: caregiverErrors } } = useForm({
     resolver: zodResolver(caregiverSchema),
@@ -151,13 +146,7 @@ export const CaregiverEngagement: React.FC = () => {
       setInteractions(mockInteractions);
       calculateStats(mockInteractions);
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load caregivers and interactions',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Failed to load caregivers and interactions', { variant: 'error' });
     } finally {
       setLoading(false);
     }
@@ -201,23 +190,11 @@ export const CaregiverEngagement: React.FC = () => {
       };
 
       setCaregivers([...caregivers, newCaregiver]);
-      onCaregiverModalClose();
+      setIsCaregiverModalOpen(false);
       resetCaregiver();
-      toast({
-        title: 'Success',
-        description: 'Caregiver added successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Caregiver added successfully', { variant: 'success' });
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to add caregiver',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Failed to add caregiver', { variant: 'error' });
     }
   };
 
@@ -235,24 +212,12 @@ export const CaregiverEngagement: React.FC = () => {
       };
 
       setInteractions([...interactions, newInteraction]);
-      onInteractionModalClose();
+      setIsInteractionModalOpen(false);
       resetInteraction();
       calculateStats([...interactions, newInteraction]);
-      toast({
-        title: 'Success',
-        description: 'Interaction scheduled successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Interaction scheduled successfully', { variant: 'success' });
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to schedule interaction',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Failed to schedule interaction', { variant: 'error' });
     }
   };
 
@@ -272,250 +237,261 @@ export const CaregiverEngagement: React.FC = () => {
 
       setInteractions(updatedInteractions);
       calculateStats(updatedInteractions);
-      toast({
-        title: 'Success',
-        description: 'Interaction status updated successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Interaction status updated successfully', { variant: 'success' });
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update interaction status',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Failed to update interaction status', { variant: 'error' });
     }
   };
 
   if (loading) {
     return (
       <Box p={4}>
-        <Spinner />
+        <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Box p={4}>
-      <Stack spacing={6}>
-        <Flex justify="space-between" align="center">
-          <Heading size="lg">Caregiver Engagement</Heading>
-          <Stack direction="row">
-            <Button colorScheme="blue" onClick={onCaregiverModalOpen}>
+    <Box p={3}>
+      <Stack spacing={3}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h4">Caregiver Engagement</Typography>
+          <Stack direction="row" spacing={2}>
+            <Button
+              variant="contained"
+              onClick={() => setIsCaregiverModalOpen(true)}
+            >
               Add Caregiver
             </Button>
-            <Button colorScheme="green" onClick={onInteractionModalOpen}>
+            <Button
+              variant="contained"
+              onClick={() => setIsInteractionModalOpen(true)}
+            >
               Schedule Interaction
             </Button>
           </Stack>
-        </Flex>
+        </Box>
 
-        <Grid templateColumns="repeat(4, 1fr)" gap={4}>
-          <Stat>
-            <StatLabel>Total Interactions</StatLabel>
-            <StatNumber>{stats.totalInteractions}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Completed</StatLabel>
-            <StatNumber>{stats.completedInteractions}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Upcoming</StatLabel>
-            <StatNumber>{stats.upcomingInteractions}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Interaction Trend</StatLabel>
-            <StatNumber>
-              {stats.interactionTrend > 0 ? '+' : ''}{stats.interactionTrend.toFixed(1)}%
-            </StatNumber>
-            <StatHelpText>
-              <StatArrow type={stats.interactionTrend >= 0 ? 'increase' : 'decrease'} />
-              vs last month
-            </StatHelpText>
-          </Stat>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Total Interactions
+              </Typography>
+              <Typography variant="h4">
+                {stats.totalInteractions}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {stats.interactionTrend > 0 ? '+' : ''}{stats.interactionTrend.toFixed(1)}% from last month
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Completed
+              </Typography>
+              <Typography variant="h4">
+                {stats.completedInteractions}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Upcoming
+              </Typography>
+              <Typography variant="h4">
+                {stats.upcomingInteractions}
+              </Typography>
+            </Paper>
+          </Grid>
         </Grid>
 
-        <Card p={4}>
-          <Heading size="md" mb={4}>Caregivers</Heading>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Name</Th>
-                <Th>Relationship</Th>
-                <Th>Contact</Th>
-                <Th>Status</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {caregivers.map(caregiver => (
-                <Tr key={caregiver.id}>
-                  <Td>{caregiver.name}</Td>
-                  <Td>{caregiver.relationship}</Td>
-                  <Td>{caregiver.phone}</Td>
-                  <Td>
-                    <Badge colorScheme={caregiver.is_primary ? 'green' : 'gray'}>
-                      {caregiver.is_primary ? 'Primary' : 'Secondary'}
-                    </Badge>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Caregivers
+            </Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Relationship</TableCell>
+                  <TableCell>Contact</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {caregivers.map((caregiver) => (
+                  <TableRow key={caregiver.id}>
+                    <TableCell>{caregiver.name}</TableCell>
+                    <TableCell>{caregiver.relationship}</TableCell>
+                    <TableCell>
+                      {caregiver.phone}
+                      {caregiver.email && <br />}
+                      {caregiver.email}
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={caregiver.is_primary ? 'Primary' : 'Secondary'}
+                        color={caregiver.is_primary ? 'primary' : 'default'}
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <IconButton size="small">
+                        <Tooltip title="Edit">
+                          <span>Edit</span>
+                        </Tooltip>
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
         </Card>
 
-        <Card p={4}>
-          <Heading size="md" mb={4}>Recent Interactions</Heading>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Type</Th>
-                <Th>Date</Th>
-                <Th>Status</Th>
-                <Th>Notes</Th>
-                <Th>Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {interactions.map(interaction => (
-                <Tr key={interaction.id}>
-                  <Td>{interaction.type}</Td>
-                  <Td>{new Date(interaction.scheduled_date).toLocaleDateString()}</Td>
-                  <Td>
-                    <Badge colorScheme={
-                      interaction.status === 'completed' ? 'green' :
-                      interaction.status === 'scheduled' ? 'blue' :
-                      interaction.status === 'cancelled' ? 'red' : 'gray'
-                    }>
-                      {interaction.status}
-                    </Badge>
-                  </Td>
-                  <Td>{interaction.notes}</Td>
-                  <Td>
-                    {interaction.status === 'scheduled' && (
-                      <Stack direction="row">
-                        <Button
-                          size="sm"
-                          colorScheme="green"
-                          onClick={() => updateInteractionStatus(interaction.id, 'completed')}
-                        >
-                          Complete
-                        </Button>
-                        <Button
-                          size="sm"
-                          colorScheme="red"
-                          onClick={() => updateInteractionStatus(interaction.id, 'cancelled')}
-                        >
-                          Cancel
-                        </Button>
-                      </Stack>
-                    )}
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Card>
-      </Stack>
-
-      {/* Add Caregiver Modal */}
-      <Modal isOpen={isCaregiverModalOpen} onClose={onCaregiverModalClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Caregiver</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+        {/* Caregiver Modal */}
+        <Dialog
+          open={isCaregiverModalOpen}
+          onClose={() => setIsCaregiverModalOpen(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Add Caregiver</DialogTitle>
+          <DialogContent>
             <form onSubmit={handleSubmitCaregiver(onSubmitCaregiver)}>
-              <Stack spacing={4}>
-                <FormControl isInvalid={!!caregiverErrors.name}>
-                  <FormLabel>Name</FormLabel>
-                  <Input {...registerCaregiver('name')} />
-                </FormControl>
-
-                <FormControl isInvalid={!!caregiverErrors.relationship}>
-                  <FormLabel>Relationship</FormLabel>
-                  <Select {...registerCaregiver('relationship')}>
-                    <option value="">Select relationship</option>
-                    <option value="Spouse">Spouse</option>
-                    <option value="Child">Child</option>
-                    <option value="Parent">Parent</option>
-                    <option value="Sibling">Sibling</option>
-                    <option value="Other">Other</option>
-                  </Select>
-                </FormControl>
-
-                <FormControl isInvalid={!!caregiverErrors.phone}>
-                  <FormLabel>Phone</FormLabel>
-                  <Input {...registerCaregiver('phone')} />
-                </FormControl>
-
-                <FormControl isInvalid={!!caregiverErrors.email}>
-                  <FormLabel>Email (Optional)</FormLabel>
-                  <Input {...registerCaregiver('email')} />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>Address (Optional)</FormLabel>
-                  <Textarea {...registerCaregiver('address')} />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>Notes (Optional)</FormLabel>
-                  <Textarea {...registerCaregiver('notes')} />
-                </FormControl>
-
-                <Button type="submit" colorScheme="blue">
-                  Add Caregiver
-                </Button>
-              </Stack>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
-      {/* Schedule Interaction Modal */}
-      <Modal isOpen={isInteractionModalOpen} onClose={onInteractionModalClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Schedule Interaction</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <form onSubmit={handleSubmitInteraction(onSubmitInteraction)}>
-              <Stack spacing={4}>
-                <FormControl isInvalid={!!interactionErrors.type}>
-                  <FormLabel>Type</FormLabel>
-                  <Select {...registerInteraction('type')}>
-                    <option value="">Select type</option>
-                    <option value="visit">Visit</option>
-                    <option value="call">Call</option>
-                    <option value="message">Message</option>
-                    <option value="other">Other</option>
-                  </Select>
-                </FormControl>
-
-                <FormControl isInvalid={!!interactionErrors.scheduled_date}>
-                  <FormLabel>Scheduled Date</FormLabel>
-                  <Input
-                    type="datetime-local"
-                    {...registerInteraction('scheduled_date')}
+              <Stack spacing={3} sx={{ mt: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Name</InputLabel>
+                  <TextField
+                    {...registerCaregiver('name')}
+                    label="Name"
                   />
                 </FormControl>
 
-                <FormControl>
-                  <FormLabel>Notes (Optional)</FormLabel>
-                  <Textarea {...registerInteraction('notes')} />
+                <FormControl fullWidth>
+                  <InputLabel>Relationship</InputLabel>
+                  <TextField
+                    {...registerCaregiver('relationship')}
+                    label="Relationship"
+                  />
                 </FormControl>
 
-                <Button type="submit" colorScheme="blue">
-                  Schedule
-                </Button>
+                <FormControl fullWidth>
+                  <InputLabel>Phone</InputLabel>
+                  <TextField
+                    {...registerCaregiver('phone')}
+                    label="Phone"
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Email (Optional)</InputLabel>
+                  <TextField
+                    {...registerCaregiver('email')}
+                    label="Email (Optional)"
+                    type="email"
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Address (Optional)</InputLabel>
+                  <TextField
+                    {...registerCaregiver('address')}
+                    label="Address (Optional)"
+                    multiline
+                    rows={3}
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Notes (Optional)</InputLabel>
+                  <TextField
+                    {...registerCaregiver('notes')}
+                    label="Notes (Optional)"
+                    multiline
+                    rows={4}
+                  />
+                </FormControl>
               </Stack>
             </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsCaregiverModalOpen(false)}>Cancel</Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmitCaregiver(onSubmitCaregiver)}
+            >
+              Add Caregiver
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Interaction Modal */}
+        <Dialog
+          open={isInteractionModalOpen}
+          onClose={() => setIsInteractionModalOpen(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Schedule Interaction</DialogTitle>
+          <DialogContent>
+            <form onSubmit={handleSubmitInteraction(onSubmitInteraction)}>
+              <Stack spacing={3} sx={{ mt: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Type</InputLabel>
+                  <Select
+                    {...registerInteraction('type')}
+                    label="Type"
+                  >
+                    <MenuItem value="visit">Visit</MenuItem>
+                    <MenuItem value="call">Call</MenuItem>
+                    <MenuItem value="message">Message</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Scheduled Date</InputLabel>
+                  <TextField
+                    {...registerInteraction('scheduled_date')}
+                    type="datetime-local"
+                    label="Scheduled Date"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Notes (Optional)</InputLabel>
+                  <TextField
+                    {...registerInteraction('notes')}
+                    label="Notes (Optional)"
+                    multiline
+                    rows={4}
+                  />
+                </FormControl>
+              </Stack>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsInteractionModalOpen(false)}>Cancel</Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmitInteraction(onSubmitInteraction)}
+            >
+              Schedule
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Stack>
     </Box>
   );
-}; 
+};
+
+export default CaregiverEngagement; 

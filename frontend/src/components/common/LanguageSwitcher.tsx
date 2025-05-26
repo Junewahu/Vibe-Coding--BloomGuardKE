@@ -10,7 +10,9 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Language as LanguageIcon } from '@mui/icons-material';
-import { changeLanguage, getLanguageDirection } from '../../i18n';
+import i18n from '../../i18n';
+
+const rtlLanguages = ['ar', 'he', 'fa'];
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -33,7 +35,9 @@ const LanguageSwitcher: React.FC = () => {
   };
 
   const handleLanguageChange = async (languageCode: string) => {
-    await changeLanguage(languageCode);
+    await i18n.changeLanguage(languageCode);
+    document.dir = rtlLanguages.includes(languageCode) ? 'rtl' : 'ltr';
+    document.documentElement.lang = languageCode;
     handleClose();
   };
 
@@ -70,7 +74,7 @@ const LanguageSwitcher: React.FC = () => {
             onClick={() => handleLanguageChange(language.code)}
             selected={i18n.language === language.code}
             sx={{
-              direction: getLanguageDirection(language.code),
+              direction: rtlLanguages.includes(language.code) ? 'rtl' : 'ltr',
             }}
           >
             <ListItemIcon>

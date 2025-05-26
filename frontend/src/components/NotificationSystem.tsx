@@ -8,8 +8,8 @@ interface NotificationContextType {
 }
 
 const NotificationContext = createContext<NotificationContextType>({
-  showNotification: () => {},
-  hideNotification: () => {},
+  showNotification: () => console.warn('showNotification called before provider initialization - this is expected during initial render'),
+  hideNotification: () => console.warn('hideNotification called before provider initialization - this is expected during initial render'),
 });
 
 export const useNotification = () => useContext(NotificationContext);

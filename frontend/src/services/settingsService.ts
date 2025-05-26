@@ -6,7 +6,9 @@ class SettingsService {
   private cache: Map<string, any> = new Map();
   private cacheTimeout = 5 * 60 * 1000; // 5 minutes
 
-  private constructor() {}
+  private constructor() {
+    this.cache = new Map();
+  }
 
   public static getInstance(): SettingsService {
     if (!SettingsService.instance) {

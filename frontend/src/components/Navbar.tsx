@@ -68,7 +68,6 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
       sx={{
         backgroundColor: 'background.paper',
         color: 'text.primary',
-        boxShadow: theme.shadows[1],
         zIndex: theme.zIndex.drawer + 1,
       }}
     >

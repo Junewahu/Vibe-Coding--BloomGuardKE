@@ -1,45 +1,66 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Box,
-  Flex,
-  Link,
+  AppBar,
+  Toolbar,
   Button,
-  useColorModeValue,
-  Stack,
-  useColorMode,
   IconButton,
-} from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+  Box,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
+import { Brightness4 as DarkModeIcon, Brightness7 as LightModeIcon } from '@mui/icons-material';
+import { useTheme as useCustomTheme } from '../../contexts/ThemeContext';
 
 export const Navbar: React.FC = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const theme = useTheme();
+  const { isDarkMode, toggleDarkMode } = useCustomTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Box bg={bgColor} px={4} borderBottom="1px" borderColor={borderColor}>
-      <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Flex alignItems="center">
-          <Link as={RouterLink} to="/" fontWeight="bold" fontSize="lg">
+    <AppBar
+      position="static"
+      color="default"
+      elevation={1}
+      sx={{
+        backgroundColor: 'background.paper',
+        color: 'text.primary',
+      }}
+    >
+      <Toolbar>
+        <Box sx={{ flexGrow: 1 }}>
+          <Button
+            component={RouterLink}
+            to="/"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: '1.25rem',
+              color: 'text.primary',
+              textTransform: 'none',
+            }}
+          >
             BloomGuard
-          </Link>
-        </Flex>
+          </Button>
+        </Box>
 
-        <Flex alignItems="center">
-          <Stack direction="row" spacing={4}>
-            <Link as={RouterLink} to="/chw/current/field-tracker">
-              <Button variant="ghost">Field Tracker</Button>
-            </Link>
-            <IconButton
-              aria-label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
-              icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-              onClick={toggleColorMode}
-              variant="ghost"
-            />
-          </Stack>
-        </Flex>
-      </Flex>
-    </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Button
+            component={RouterLink}
+            to="/chw/current/field-tracker"
+            variant="text"
+            color="inherit"
+          >
+            Field Tracker
+          </Button>
+          <IconButton
+            onClick={toggleDarkMode}
+            color="inherit"
+            aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+          >
+            {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+          </IconButton>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }; 

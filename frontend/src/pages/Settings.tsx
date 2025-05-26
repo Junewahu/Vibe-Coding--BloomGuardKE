@@ -44,7 +44,7 @@ import { settingsService } from '../services/settingsService';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNotification } from '../components/NotificationSystem';
 import { settingsSchema } from '../validations/settingsValidation';
-import type { Settings } from '../types/settings';
+import type { Settings as SettingsType } from '../types/settings';
 import { theme as customTheme } from '../utils/theme';
 
 const Settings: React.FC = () => {
@@ -111,9 +111,9 @@ const Settings: React.FC = () => {
         start: '09:00',
         end: '17:00',
       },
-    } as Settings,
+    } as SettingsType,
     validationSchema: settingsSchema,
-    onSubmit: async (values: Settings, helpers: FormikHelpers<Settings>) => {
+    onSubmit: async (values: SettingsType, helpers: FormikHelpers<SettingsType>) => {
       try {
         setIsLoading(true);
         await settingsService.updateSettings(values);

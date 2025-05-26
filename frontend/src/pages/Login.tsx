@@ -159,7 +159,7 @@ const Login: React.FC = () => {
                 variant="body2"
                 sx={{ textDecoration: 'none' }}
               >
-                Don't have an account? Sign Up
+                Don&apos;t have an account? Sign Up
               </Link>
             </Box>
           </Box>

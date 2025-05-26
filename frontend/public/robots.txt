@@ -1,0 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+
+# Allow all other paths
+Allow: /
+
+# Sitemap location
+Sitemap: https://bloomguard.ke/sitemap.xml 

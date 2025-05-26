@@ -7,6 +7,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 interface ThemeContextType {
   mode: PaletteMode;
   toggleTheme: () => void;
+  isDarkMode: boolean;
+  toggleDarkMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -29,8 +31,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
   };
 
+  const isDarkMode = mode === 'dark';
+  const toggleDarkMode = toggleTheme;
+
   return (
-    <ThemeContext.Provider value={{ mode, toggleTheme }}>
+    <ThemeContext.Provider value={{ mode, toggleTheme, isDarkMode, toggleDarkMode }}>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         {children}

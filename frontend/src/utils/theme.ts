@@ -1,4 +1,4 @@
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { PaletteColorOptions } from '@mui/material';
 
 declare module '@mui/material/styles' {
@@ -19,11 +19,6 @@ declare module '@mui/material/styles' {
       lg: string;
       xl: string;
     };
-    shadows: {
-      soft: string;
-      medium: string;
-      strong: string;
-    };
   }
   interface ThemeOptions {
     colors?: {
@@ -41,11 +36,6 @@ declare module '@mui/material/styles' {
       md?: string;
       lg?: string;
       xl?: string;
-    };
-    shadows?: {
-      soft?: string;
-      medium?: string;
-      strong?: string;
     };
   }
 }
@@ -66,12 +56,6 @@ const borderRadius = {
   md: '8px',
   lg: '16px',
   xl: '24px',
-};
-
-const shadows = {
-  soft: '0 2px 4px rgba(0, 0, 0, 0.05)',
-  medium: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  strong: '0 8px 16px rgba(0, 0, 0, 0.15)',
 };
 
 export const theme = createTheme({
@@ -165,7 +149,6 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: borderRadius.lg,
-          boxShadow: shadows.soft,
         },
       },
     },
@@ -188,7 +171,6 @@ export const theme = createTheme({
   },
   colors,
   borderRadius,
-  shadows,
 });
 
 export const customTheme = theme;

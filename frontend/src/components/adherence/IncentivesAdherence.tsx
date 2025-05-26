@@ -3,44 +3,37 @@ import {
   Box,
   Button,
   Card,
-  Flex,
-  Heading,
+  CardContent,
+  Typography,
   Stack,
   Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Badge,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
   FormControl,
-  FormLabel,
-  Input,
+  InputLabel,
   Select,
-  Textarea,
-  useToast,
-  Spinner,
+  MenuItem,
   Grid,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  StatArrow,
-  Progress,
-  Text,
-} from '@chakra-ui/react';
+  Paper,
+  LinearProgress,
+  IconButton,
+  Tooltip,
+  useTheme,
+} from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useParams } from 'react-router-dom';
 import { usePatientStore } from '../../stores/patientStore';
+import { useSnackbar } from 'notistack';
 
 interface AdherenceMetric {
   id: string;
@@ -108,10 +101,10 @@ export const IncentivesAdherence: React.FC = () => {
     earnedIncentives: 0,
     adherenceTrend: 0,
   });
-
-  const { isOpen: isMetricModalOpen, onOpen: onMetricModalOpen, onClose: onMetricModalClose } = useDisclosure();
-  const { isOpen: isIncentiveModalOpen, onOpen: onIncentiveModalOpen, onClose: onIncentiveModalClose } = useDisclosure();
-  const toast = useToast();
+  const [isMetricModalOpen, setIsMetricModalOpen] = useState(false);
+  const [isIncentiveModalOpen, setIsIncentiveModalOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme();
 
   const { register: registerMetric, handleSubmit: handleSubmitMetric, reset: resetMetric, formState: { errors: metricErrors } } = useForm({
     resolver: zodResolver(adherenceSchema),
@@ -170,13 +163,7 @@ export const IncentivesAdherence: React.FC = () => {
       setIncentives(mockIncentives);
       calculateStats(mockMetrics, mockIncentives);
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load adherence metrics and incentives',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Failed to load adherence metrics and incentives', { variant: 'error' });
     } finally {
       setLoading(false);
     }
@@ -229,24 +216,12 @@ export const IncentivesAdherence: React.FC = () => {
       };
 
       setMetrics([...metrics, newMetric]);
-      onMetricModalClose();
+      setIsMetricModalOpen(false);
       resetMetric();
       calculateStats([...metrics, newMetric], incentives);
-      toast({
-        title: 'Success',
-        description: 'Adherence metric added successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Adherence metric added successfully', { variant: 'success' });
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to add adherence metric',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Failed to add adherence metric', { variant: 'error' });
     }
   };
 
@@ -263,24 +238,12 @@ export const IncentivesAdherence: React.FC = () => {
       };
 
       setIncentives([...incentives, newIncentive]);
-      onIncentiveModalClose();
+      setIsIncentiveModalOpen(false);
       resetIncentive();
       calculateStats(metrics, [...incentives, newIncentive]);
-      toast({
-        title: 'Success',
-        description: 'Incentive added successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Incentive added successfully', { variant: 'success' });
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to add incentive',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Failed to add incentive', { variant: 'error' });
     }
   };
 
@@ -300,309 +263,361 @@ export const IncentivesAdherence: React.FC = () => {
 
       setMetrics(updatedMetrics);
       calculateStats(updatedMetrics, incentives);
-      toast({
-        title: 'Success',
-        description: 'Metric progress updated successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Metric progress updated successfully', { variant: 'success' });
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update metric progress',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      enqueueSnackbar('Failed to update metric progress', { variant: 'error' });
     }
   };
 
   if (loading) {
     return (
       <Box p={4}>
-        <Spinner />
+        {/* Add loading component */}
       </Box>
     );
   }
 
   return (
-    <Box p={4}>
-      <Stack spacing={6}>
-        <Flex justify="space-between" align="center">
-          <Heading size="lg">Incentives & Adherence</Heading>
-          <Stack direction="row">
-            <Button colorScheme="blue" onClick={onMetricModalOpen}>
+    <Box p={3}>
+      <Stack spacing={3}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h4">Incentives & Adherence</Typography>
+          <Stack direction="row" spacing={2}>
+            <Button
+              variant="contained"
+              onClick={() => setIsMetricModalOpen(true)}
+            >
               Add Metric
             </Button>
-            <Button colorScheme="green" onClick={onIncentiveModalOpen}>
+            <Button
+              variant="contained"
+              onClick={() => setIsIncentiveModalOpen(true)}
+            >
               Add Incentive
             </Button>
           </Stack>
-        </Flex>
+        </Box>
 
-        <Grid templateColumns="repeat(4, 1fr)" gap={4}>
-          <Stat>
-            <StatLabel>Overall Adherence</StatLabel>
-            <StatNumber>{stats.overallAdherence.toFixed(1)}%</StatNumber>
-            <StatHelpText>
-              <StatArrow type={stats.adherenceTrend >= 0 ? 'increase' : 'decrease'} />
-              {Math.abs(stats.adherenceTrend).toFixed(1)}% vs last month
-            </StatHelpText>
-          </Stat>
-          <Stat>
-            <StatLabel>Active Metrics</StatLabel>
-            <StatNumber>{stats.activeMetrics}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Earned Incentives</StatLabel>
-            <StatNumber>{stats.earnedIncentives}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel>Available Incentives</StatLabel>
-            <StatNumber>
-              {incentives.filter(i => i.status === 'pending').length}
-            </StatNumber>
-          </Stat>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Overall Adherence
+              </Typography>
+              <Typography variant="h4">
+                {stats.overallAdherence.toFixed(1)}%
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {stats.adherenceTrend > 0 ? '+' : ''}{stats.adherenceTrend.toFixed(1)}% from last month
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Active Metrics
+              </Typography>
+              <Typography variant="h4">
+                {stats.activeMetrics}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Earned Incentives
+              </Typography>
+              <Typography variant="h4">
+                {stats.earnedIncentives}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Available Incentives
+              </Typography>
+              <Typography variant="h4">
+                {incentives.filter(i => i.status === 'pending').length}
+              </Typography>
+            </Paper>
+          </Grid>
         </Grid>
 
-        <Card p={4}>
-          <Heading size="md" mb={4}>Adherence Metrics</Heading>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Type</Th>
-                <Th>Target</Th>
-                <Th>Progress</Th>
-                <Th>Period</Th>
-                <Th>Status</Th>
-                <Th>Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {metrics.map(metric => (
-                <Tr key={metric.id}>
-                  <Td>{metric.type}</Td>
-                  <Td>{metric.target}</Td>
-                  <Td>
-                    <Box>
-                      <Progress 
-                        value={(metric.achieved / metric.target) * 100} 
-                        colorScheme={metric.achieved >= metric.target ? 'green' : 'blue'}
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Adherence Metrics
+            </Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Target</TableCell>
+                  <TableCell>Achieved</TableCell>
+                  <TableCell>Progress</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {metrics.map((metric) => (
+                  <TableRow key={metric.id}>
+                    <TableCell>{metric.type}</TableCell>
+                    <TableCell>{metric.target}</TableCell>
+                    <TableCell>{metric.achieved}</TableCell>
+                    <TableCell>
+                      <Box sx={{ width: '100%', mr: 1 }}>
+                        <LinearProgress
+                          variant="determinate"
+                          value={(metric.achieved / metric.target) * 100}
+                          color={metric.achieved >= metric.target ? 'success' : 'primary'}
+                        />
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={metric.status}
+                        color={metric.status === 'active' ? 'primary' : 'default'}
+                        size="small"
                       />
-                      <Text fontSize="sm" mt={1}>
-                        {metric.achieved} / {metric.target}
-                      </Text>
-                    </Box>
-                  </Td>
-                  <Td>{metric.period}</Td>
-                  <Td>
-                    <Badge colorScheme={
-                      metric.status === 'completed' ? 'green' :
-                      metric.status === 'active' ? 'blue' : 'gray'
-                    }>
-                      {metric.status}
-                    </Badge>
-                  </Td>
-                  <Td>
-                    {metric.status === 'active' && (
-                      <Button
-                        size="sm"
-                        colorScheme="blue"
-                        onClick={() => updateMetricProgress(metric.id, metric.achieved + 1)}
-                      >
-                        Update Progress
-                      </Button>
-                    )}
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton size="small">
+                        <Tooltip title="Edit">
+                          <span>Edit</span>
+                        </Tooltip>
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
         </Card>
 
-        <Card p={4}>
-          <Heading size="md" mb={4}>Incentives</Heading>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Type</Th>
-                <Th>Value</Th>
-                <Th>Criteria</Th>
-                <Th>Status</Th>
-                <Th>Earned/Redeemed</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {incentives.map(incentive => (
-                <Tr key={incentive.id}>
-                  <Td>{incentive.type}</Td>
-                  <Td>{incentive.value}</Td>
-                  <Td>
-                    {incentive.criteria.metric_type}: {incentive.criteria.target_value} ({incentive.criteria.period})
-                  </Td>
-                  <Td>
-                    <Badge colorScheme={
-                      incentive.status === 'earned' ? 'green' :
-                      incentive.status === 'redeemed' ? 'purple' :
-                      incentive.status === 'expired' ? 'red' : 'blue'
-                    }>
-                      {incentive.status}
-                    </Badge>
-                  </Td>
-                  <Td>
-                    {incentive.earned_at && new Date(incentive.earned_at).toLocaleDateString()}
-                    {incentive.redeemed_at && ` (Redeemed: ${new Date(incentive.redeemed_at).toLocaleDateString()})`}
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Incentives
+            </Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Value</TableCell>
+                  <TableCell>Criteria</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Earned/Redeemed</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {incentives.map((incentive) => (
+                  <TableRow key={incentive.id}>
+                    <TableCell>{incentive.type}</TableCell>
+                    <TableCell>{incentive.value}</TableCell>
+                    <TableCell>
+                      {incentive.criteria.metric_type}: {incentive.criteria.target_value} ({incentive.criteria.period})
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={incentive.status}
+                        color={
+                          incentive.status === 'earned' ? 'success' :
+                          incentive.status === 'redeemed' ? 'primary' :
+                          incentive.status === 'expired' ? 'error' : 'default'
+                        }
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {incentive.earned_at && new Date(incentive.earned_at).toLocaleDateString()}
+                      {incentive.redeemed_at && ` (Redeemed: ${new Date(incentive.redeemed_at).toLocaleDateString()})`}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
         </Card>
-      </Stack>
 
-      {/* Add Metric Modal */}
-      <Modal isOpen={isMetricModalOpen} onClose={onMetricModalClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Adherence Metric</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+        {/* Metric Modal */}
+        <Dialog
+          open={isMetricModalOpen}
+          onClose={() => setIsMetricModalOpen(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Add Adherence Metric</DialogTitle>
+          <DialogContent>
             <form onSubmit={handleSubmitMetric(onSubmitMetric)}>
-              <Stack spacing={4}>
-                <FormControl isInvalid={!!metricErrors.type}>
-                  <FormLabel>Type</FormLabel>
-                  <Select {...registerMetric('type')}>
-                    <option value="">Select type</option>
-                    <option value="medication">Medication</option>
-                    <option value="appointment">Appointment</option>
-                    <option value="lifestyle">Lifestyle</option>
-                    <option value="other">Other</option>
+              <Stack spacing={3} sx={{ mt: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Type</InputLabel>
+                  <Select
+                    {...registerMetric('type')}
+                    label="Type"
+                  >
+                    <MenuItem value="medication">Medication</MenuItem>
+                    <MenuItem value="appointment">Appointment</MenuItem>
+                    <MenuItem value="lifestyle">Lifestyle</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
                   </Select>
                 </FormControl>
 
-                <FormControl isInvalid={!!metricErrors.target}>
-                  <FormLabel>Target</FormLabel>
-                  <Input
-                    type="number"
+                <FormControl fullWidth>
+                  <InputLabel>Target</InputLabel>
+                  <TextField
                     {...registerMetric('target', { valueAsNumber: true })}
-                  />
-                </FormControl>
-
-                <FormControl isInvalid={!!metricErrors.period}>
-                  <FormLabel>Period</FormLabel>
-                  <Select {...registerMetric('period')}>
-                    <option value="">Select period</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                  </Select>
-                </FormControl>
-
-                <FormControl isInvalid={!!metricErrors.start_date}>
-                  <FormLabel>Start Date</FormLabel>
-                  <Input
-                    type="date"
-                    {...registerMetric('start_date')}
-                  />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>End Date (Optional)</FormLabel>
-                  <Input
-                    type="date"
-                    {...registerMetric('end_date')}
-                  />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>Notes (Optional)</FormLabel>
-                  <Textarea {...registerMetric('notes')} />
-                </FormControl>
-
-                <Button type="submit" colorScheme="blue">
-                  Add Metric
-                </Button>
-              </Stack>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
-      {/* Add Incentive Modal */}
-      <Modal isOpen={isIncentiveModalOpen} onClose={onIncentiveModalClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Incentive</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <form onSubmit={handleSubmitIncentive(onSubmitIncentive)}>
-              <Stack spacing={4}>
-                <FormControl isInvalid={!!incentiveErrors.type}>
-                  <FormLabel>Type</FormLabel>
-                  <Select {...registerIncentive('type')}>
-                    <option value="">Select type</option>
-                    <option value="monetary">Monetary</option>
-                    <option value="non_monetary">Non-Monetary</option>
-                    <option value="recognition">Recognition</option>
-                  </Select>
-                </FormControl>
-
-                <FormControl isInvalid={!!incentiveErrors.value}>
-                  <FormLabel>Value</FormLabel>
-                  <Input {...registerIncentive('value')} />
-                </FormControl>
-
-                <FormControl isInvalid={!!incentiveErrors.description}>
-                  <FormLabel>Description</FormLabel>
-                  <Textarea {...registerIncentive('description')} />
-                </FormControl>
-
-                <FormControl isInvalid={!!incentiveErrors.criteria?.metric_type}>
-                  <FormLabel>Metric Type</FormLabel>
-                  <Select {...registerIncentive('criteria.metric_type')}>
-                    <option value="">Select metric type</option>
-                    <option value="medication">Medication</option>
-                    <option value="appointment">Appointment</option>
-                    <option value="lifestyle">Lifestyle</option>
-                    <option value="other">Other</option>
-                  </Select>
-                </FormControl>
-
-                <FormControl isInvalid={!!incentiveErrors.criteria?.target_value}>
-                  <FormLabel>Target Value</FormLabel>
-                  <Input
                     type="number"
-                    {...registerIncentive('criteria.target_value', { valueAsNumber: true })}
                   />
                 </FormControl>
 
-                <FormControl isInvalid={!!incentiveErrors.criteria?.period}>
-                  <FormLabel>Period</FormLabel>
-                  <Select {...registerIncentive('criteria.period')}>
-                    <option value="">Select period</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
+                <FormControl fullWidth>
+                  <InputLabel>Period</InputLabel>
+                  <Select
+                    {...registerMetric('period')}
+                    label="Period"
+                  >
+                    <MenuItem value="daily">Daily</MenuItem>
+                    <MenuItem value="weekly">Weekly</MenuItem>
+                    <MenuItem value="monthly">Monthly</MenuItem>
                   </Select>
                 </FormControl>
 
-                <FormControl>
-                  <FormLabel>Expiry Date (Optional)</FormLabel>
-                  <Input
+                <FormControl fullWidth>
+                  <InputLabel>Start Date</InputLabel>
+                  <TextField
+                    {...registerMetric('start_date')}
                     type="date"
-                    {...registerIncentive('expiry_date')}
                   />
                 </FormControl>
 
-                <Button type="submit" colorScheme="blue">
-                  Add Incentive
-                </Button>
+                <FormControl fullWidth>
+                  <InputLabel>End Date (Optional)</InputLabel>
+                  <TextField
+                    {...registerMetric('end_date')}
+                    type="date"
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Notes (Optional)</InputLabel>
+                  <TextField
+                    {...registerMetric('notes')}
+                    multiline
+                    rows={4}
+                  />
+                </FormControl>
               </Stack>
             </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsMetricModalOpen(false)}>Cancel</Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmitMetric(onSubmitMetric)}
+            >
+              Add Metric
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Incentive Modal */}
+        <Dialog
+          open={isIncentiveModalOpen}
+          onClose={() => setIsIncentiveModalOpen(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Add Incentive</DialogTitle>
+          <DialogContent>
+            <form onSubmit={handleSubmitIncentive(onSubmitIncentive)}>
+              <Stack spacing={3} sx={{ mt: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel>Type</InputLabel>
+                  <Select
+                    {...registerIncentive('type')}
+                    label="Type"
+                  >
+                    <MenuItem value="monetary">Monetary</MenuItem>
+                    <MenuItem value="non_monetary">Non-Monetary</MenuItem>
+                    <MenuItem value="recognition">Recognition</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Value</InputLabel>
+                  <TextField
+                    {...registerIncentive('value')}
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Description</InputLabel>
+                  <TextField
+                    {...registerIncentive('description')}
+                    multiline
+                    rows={4}
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Metric Type</InputLabel>
+                  <Select
+                    {...registerIncentive('criteria.metric_type')}
+                    label="Metric Type"
+                  >
+                    <MenuItem value="medication">Medication</MenuItem>
+                    <MenuItem value="appointment">Appointment</MenuItem>
+                    <MenuItem value="lifestyle">Lifestyle</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Target Value</InputLabel>
+                  <TextField
+                    {...registerIncentive('criteria.target_value', { valueAsNumber: true })}
+                    type="number"
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Period</InputLabel>
+                  <Select
+                    {...registerIncentive('criteria.period')}
+                    label="Period"
+                  >
+                    <MenuItem value="daily">Daily</MenuItem>
+                    <MenuItem value="weekly">Weekly</MenuItem>
+                    <MenuItem value="monthly">Monthly</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <InputLabel>Expiry Date (Optional)</InputLabel>
+                  <TextField
+                    {...registerIncentive('expiry_date')}
+                    type="date"
+                  />
+                </FormControl>
+              </Stack>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsIncentiveModalOpen(false)}>Cancel</Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmitIncentive(onSubmitIncentive)}
+            >
+              Add Incentive
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Stack>
     </Box>
   );
-}; 
+};
+
+export default IncentivesAdherence; 

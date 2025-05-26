@@ -2,34 +2,32 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardBody,
-  CardHeader,
   Flex,
   Heading,
   Stack,
   Text,
-  useToast,
   Badge,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
   Spinner,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
   FormControl,
   FormLabel,
   Input,
   Select,
-} from '@chakra-ui/react';
+  Card,
+  CardHeader,
+  CardContent,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+} from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePatientStore } from '../../stores/patientStore';
 import { Immunization } from '../../types/patient';
@@ -37,6 +35,7 @@ import { format } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import CloseIcon from '@mui/icons-material/Close';
 
 const immunizationSchema = z.object({
   vaccine_name: z.string().min(1, 'Vaccine name is required'),
@@ -54,9 +53,10 @@ export const Immunizations: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [immunizations, setImmunizations] = useState<Immunization[]>([]);
   const { currentPatient, getPatient, getImmunizations, createImmunization } = usePatientStore();
-  const toast = useToast();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastSeverity, setToastSeverity] = useState<'success' | 'error' | 'warning' | 'info'>( 'success');
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -78,43 +78,35 @@ export const Immunizations: React.FC = () => {
       const immunizations = await getImmunizations(id);
       setImmunizations(immunizations);
     } catch (error) {
-      toast({
-        title: 'Error loading immunizations',
-        description: error instanceof Error ? error.message : 'An error occurred',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      setToastMessage(error instanceof Error ? error.message : 'An error occurred');
+      setToastSeverity('error');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    reset();
+  };
+
   const handleAddImmunization = () => {
     reset();
-    onOpen();
+    handleOpenModal();
   };
 
   const onSubmit = async (data: ImmunizationFormData) => {
     if (!id) return;
     try {
       await createImmunization(id, data);
-      toast({
-        title: 'Immunization record created successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-      onClose();
+      setToastMessage('Immunization record created successfully');
+      setToastSeverity('success');
+      handleCloseModal();
       loadPatientAndImmunizations();
     } catch (error) {
-      toast({
-        title: 'Error creating immunization record',
-        description: error instanceof Error ? error.message : 'An error occurred',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      setToastMessage(error instanceof Error ? error.message : 'An error occurred');
+      setToastSeverity('error');
     }
   };
 
@@ -172,35 +164,35 @@ export const Immunizations: React.FC = () => {
               {currentPatient.first_name} {currentPatient.last_name}
             </Heading>
           </CardHeader>
-          <CardBody>
+          <CardContent>
             <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>Vaccine</Th>
-                  <Th>Scheduled Date</Th>
-                  <Th>Administered Date</Th>
-                  <Th>Status</Th>
-                  <Th>Batch Number</Th>
-                  <Th>Actions</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Vaccine</TableCell>
+                  <TableCell>Scheduled Date</TableCell>
+                  <TableCell>Administered Date</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Batch Number</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {immunizations.map((immunization) => (
-                  <Tr key={immunization.id}>
-                    <Td>{immunization.vaccine_name}</Td>
-                    <Td>{format(new Date(immunization.scheduled_date), 'PPP')}</Td>
-                    <Td>
+                  <TableRow key={immunization.id}>
+                    <TableCell>{immunization.vaccine_name}</TableCell>
+                    <TableCell>{format(new Date(immunization.scheduled_date), 'PPP')}</TableCell>
+                    <TableCell>
                       {immunization.administered_date
                         ? format(new Date(immunization.administered_date), 'PPP')
                         : 'Not administered'}
-                    </Td>
-                    <Td>
+                    </TableCell>
+                    <TableCell>
                       <Badge colorScheme={getStatusColor(immunization.status)}>
                         {immunization.status}
                       </Badge>
-                    </Td>
-                    <Td>{immunization.batch_number || 'N/A'}</Td>
-                    <Td>
+                    </TableCell>
+                    <TableCell>{immunization.batch_number || 'N/A'}</TableCell>
+                    <TableCell>
                       <Button
                         size="sm"
                         colorScheme="blue"
@@ -209,84 +201,88 @@ export const Immunizations: React.FC = () => {
                       >
                         View
                       </Button>
-                    </Td>
-                  </Tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
                 {immunizations.length === 0 && (
-                  <Tr>
-                    <Td colSpan={6} textAlign="center">
+                  <TableRow>
+                    <TableCell colSpan={6} textAlign="center">
                       No immunization records found
-                    </Td>
-                  </Tr>
+                    </TableCell>
+                  </TableRow>
                 )}
-              </Tbody>
+              </TableBody>
             </Table>
-          </CardBody>
+          </CardContent>
         </Card>
       </Stack>
 
-      {/* Add Immunization Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Immunization Record</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Stack spacing={4}>
-                <FormControl isInvalid={!!errors.vaccine_name}>
-                  <FormLabel>Vaccine Name</FormLabel>
-                  <Select {...register('vaccine_name')}>
-                    <option value="">Select vaccine</option>
-                    <option value="bcg">BCG</option>
-                    <option value="polio">Polio</option>
-                    <option value="dpt">DPT</option>
-                    <option value="measles">Measles</option>
-                    <option value="hepatitis_b">Hepatitis B</option>
-                    <option value="pneumococcal">Pneumococcal</option>
-                    <option value="rotavirus">Rotavirus</option>
-                    <option value="influenza">Influenza</option>
-                  </Select>
-                </FormControl>
+      <Dialog open={isModalOpen} onClose={handleCloseModal}>
+        <DialogTitle>
+          Add New Immunization Record
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseModal}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1 }}>
+            <FormControl fullWidth margin="normal" error={!!errors.vaccine_name}>
+              <FormLabel>Vaccine Name</FormLabel>
+              <Input {...register('vaccine_name')} />
+              {errors.vaccine_name && <Text color="error.main" fontSize="sm">{errors.vaccine_name.message}</Text>}
+            </FormControl>
+            <FormControl fullWidth margin="normal" error={!!errors.scheduled_date}>
+              <FormLabel>Scheduled Date</FormLabel>
+              <Input type="date" {...register('scheduled_date')} />
+              {errors.scheduled_date && <Text color="error.main" fontSize="sm">{errors.scheduled_date.message}</Text>}
+            </FormControl>
+            <FormControl fullWidth margin="normal" error={!!errors.administered_date}>
+              <FormLabel>Administered Date (Optional)</FormLabel>
+              <Input type="date" {...register('administered_date')} />
+              {errors.administered_date && <Text color="error.main" fontSize="sm">{errors.administered_date.message}</Text>}
+            </FormControl>
+            <FormControl fullWidth margin="normal" error={!!errors.batch_number}>
+              <FormLabel>Batch Number (Optional)</FormLabel>
+              <Input {...register('batch_number')} />
+              {errors.batch_number && <Text color="error.main" fontSize="sm">{errors.batch_number.message}</Text>}
+            </FormControl>
+            <FormControl fullWidth margin="normal" error={!!errors.administered_by}>
+              <FormLabel>Administered By (Optional)</FormLabel>
+              <Input {...register('administered_by')} />
+              {errors.administered_by && <Text color="error.main" fontSize="sm">{errors.administered_by.message}</Text>}
+            </FormControl>
+            <FormControl fullWidth margin="normal" error={!!errors.status}>
+              <FormLabel>Status</FormLabel>
+              <Select native {...register('status')}>
+                <option value="">Select Status</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="completed">Completed</option>
+                <option value="missed">Missed</option>
+              </Select>
+              {errors.status && <Text color="error.main" fontSize="sm">{errors.status.message}</Text>}
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal}>Cancel</Button>
+          <Button onClick={handleSubmit(onSubmit)} variant="contained" color="primary">Save Record</Button>
+        </DialogActions>
+      </Dialog>
 
-                <FormControl isInvalid={!!errors.scheduled_date}>
-                  <FormLabel>Scheduled Date</FormLabel>
-                  <Input type="date" {...register('scheduled_date')} />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>Administered Date</FormLabel>
-                  <Input type="date" {...register('administered_date')} />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>Batch Number</FormLabel>
-                  <Input {...register('batch_number')} placeholder="Enter batch number" />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>Administered By</FormLabel>
-                  <Input {...register('administered_by')} placeholder="Enter name of healthcare provider" />
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.status}>
-                  <FormLabel>Status</FormLabel>
-                  <Select {...register('status')}>
-                    <option value="">Select status</option>
-                    <option value="scheduled">Scheduled</option>
-                    <option value="completed">Completed</option>
-                    <option value="missed">Missed</option>
-                  </Select>
-                </FormControl>
-
-                <Button type="submit" colorScheme="blue" mr={3}>
-                  Save Record
-                </Button>
-              </Stack>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <Snackbar open={!!toastMessage} autoHideDuration={6000} onClose={() => setToastMessage(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
+        <Alert onClose={() => setToastMessage(null)} severity={toastSeverity} sx={{ width: '100%' }}>
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }; 

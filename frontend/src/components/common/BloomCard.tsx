@@ -16,12 +16,12 @@ export interface BloomCardProps {
 
 const StyledCard = styled(Card)<{ elevation?: number }>(({ theme, elevation = 1 }) => ({
   borderRadius: theme.shape.borderRadius * 2,
-  boxShadow: theme.shadows[elevation],
+  boxShadow: theme.shadows[Math.min(elevation, 24) as unknown as keyof typeof theme.shadows],
   transition: 'all 0.3s ease-in-out',
   cursor: 'pointer',
   '&:hover': {
     transform: 'translateY(-4px)',
-    boxShadow: theme.shadows[elevation + 2],
+    boxShadow: theme.shadows[Math.min(elevation + 2, 24) as unknown as keyof typeof theme.shadows],
   },
 }));
 
@@ -29,7 +29,7 @@ const StatusIndicator = styled(Box)<{ status?: string }>(({ theme, status }) => 
   width: 8,
   height: 8,
   borderRadius: '50%',
-  backgroundColor: status ? theme.palette.status[status] : 'transparent',
+  backgroundColor: status ? theme.palette.status[status as keyof typeof theme.palette.status] : 'transparent',
   marginRight: theme.spacing(1),
   animation: status === 'warning' ? 'pulse 2s infinite' : 'none',
   '@keyframes pulse': {

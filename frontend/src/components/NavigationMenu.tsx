@@ -64,7 +64,7 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ open, onClose }) => {
           width: 240,
           boxSizing: 'border-box',
           backgroundColor: 'background.paper',
-          borderRight: `1px solid ${customTheme.colors.lightBorder}`,
+          borderRight: `1px solid ${customTheme.colors.lightGray}`,
         },
       }}
     >
