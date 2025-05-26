@@ -12,11 +12,14 @@ from .routers import (
     sync,
     chw_tracker,
     incentives,
-    analytics
+    analytics,
+    communications,
+    nhif
 )
-from .database import create_tables
+from .database import create_tables, engine, Base
 from .config import settings
 from .services.task_processor import start_task_processor
+from .services.sync_service import sync_service
 import asyncio
 
 # Create FastAPI app
@@ -37,6 +40,7 @@ app.add_middleware(
 
 # Create database tables
 create_tables()
+Base.metadata.create_all(bind=engine)
 
 # Include routers
 app.include_router(
@@ -95,11 +99,19 @@ app.include_router(
     prefix=f"{settings.api_v1_prefix}/analytics",
     tags=["analytics"]
 )
+app.include_router(
+    communications.router,
+    prefix=f"{settings.api_v1_prefix}/communications",
+    tags=["communications"]
+)
+app.include_router(nhif.router)
 
 @app.on_event("startup")
 async def startup_event():
     """Start background tasks on application startup"""
     asyncio.create_task(start_task_processor())
+    # Start the sync service
+    asyncio.create_task(sync_service.start())
 
 @app.get("/")
 async def root():
@@ -114,4 +126,9 @@ async def root():
 @app.get("/health")
 def health_check():
     """Health check endpoint"""
-    return {"status": "healthy"} 
+    return {"status": "healthy"}
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    # Stop the sync service
+    await sync_service.stop() 

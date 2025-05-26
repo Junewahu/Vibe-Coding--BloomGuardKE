@@ -1,43 +1,26 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, ThemeOptions } from '@mui/material/styles';
 
-export const colors = {
-  babyBlue: '#BDE0FE',
-  candyPink: '#FFAFCC',
-  lavender: '#CDB4DB',
-  skyBlue: '#A2D2FF',
-  deepNavy: '#22223B',
-  white: '#FFFFFF',
-  gray: {
-    100: '#F8F9FA',
-    200: '#E9ECEF',
-    300: '#DEE2E6',
-    400: '#CED4DA',
-    500: '#ADB5BD',
-    600: '#6C757D',
-    700: '#495057',
-    800: '#343A40',
-    900: '#212529',
-  },
-};
-
-export const lightTheme = createTheme({
+const themeOptions: ThemeOptions = {
   palette: {
-    mode: 'light',
     primary: {
-      main: colors.skyBlue,
-      contrastText: colors.deepNavy,
+      main: '#A2D2FF',
+      light: '#BDE0FE',
+      dark: '#22223B',
+      contrastText: '#22223B',
     },
     secondary: {
-      main: colors.candyPink,
-      contrastText: colors.deepNavy,
+      main: '#FFAFCC',
+      light: '#FFC8DD',
+      dark: '#CDB4DB',
+      contrastText: '#22223B',
     },
     background: {
-      default: colors.babyBlue,
-      paper: colors.white,
+      default: '#BDE0FE',
+      paper: '#FFFFFF',
     },
     text: {
-      primary: colors.deepNavy,
-      secondary: colors.gray[700],
+      primary: '#22223B',
+      secondary: '#343A40',
     },
     error: {
       main: '#FF6B6B',
@@ -47,9 +30,6 @@ export const lightTheme = createTheme({
     },
     success: {
       main: '#6BCB77',
-    },
-    info: {
-      main: colors.lavender,
     },
   },
   typography: {
@@ -95,14 +75,13 @@ export const lightTheme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
-          borderRadius: '2rem',
-          padding: '0.5rem 1.5rem',
-          fontWeight: 600,
+          borderRadius: 8,
+          padding: '8px 16px',
         },
         contained: {
           boxShadow: 'none',
           '&:hover': {
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
           },
         },
       },
@@ -111,39 +90,20 @@ export const lightTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.05)',
         },
       },
     },
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: '1rem',
+          borderRadius: 8,
         },
       },
     },
   },
-});
+};
 
-export const darkTheme = createTheme({
-  ...lightTheme,
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: colors.skyBlue,
-      contrastText: colors.white,
-    },
-    secondary: {
-      main: colors.candyPink,
-      contrastText: colors.white,
-    },
-    background: {
-      default: colors.deepNavy,
-      paper: colors.gray[800],
-    },
-    text: {
-      primary: colors.white,
-      secondary: colors.babyBlue,
-    },
-  },
-}); 
+const theme = createTheme(themeOptions);
+
+export default theme; 

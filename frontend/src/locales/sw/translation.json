@@ -45,7 +45,10 @@
     "filter": "Chuja",
     "sort": "Panga",
     "noResults": "Hakuna matokeo yaliyopatikana",
-    "required": "Inahitajika"
+    "required": "Inahitajika",
+    "create": "Unda",
+    "update": "Sasisha",
+    "actions": "Vitendo"
   },
   "navigation": {
     "dashboard": "Dashibodi",
@@ -60,5 +63,68 @@
     "email": "Tafadhali weka anwani ya barua pepe halali",
     "password": "Nywila lazima iwe na herufi 8 au zaidi na iwe na herufi kubwa moja, herufi ndogo moja, nambari moja, na herufi maalum moja",
     "passwordMatch": "Nywila lazima zifanane"
+  },
+  "reminders": {
+    "title": "Kumbusho",
+    "addReminder": "Ongeza Kumbusho",
+    "searchPlaceholder": "Tafuta kumbusho...",
+    "activeReminders": "Kumbusho Zinazotumika",
+    "templates": "Vigezo vya Ujumbe",
+    "sentMessages": "Ujumbe Ulizotumwa",
+    "patient": "Mgonjwa",
+    "date": "Tarehe",
+    "time": "Muda",
+    "priority": "Kipaumbele",
+    "status": "Hali",
+    "actions": "Vitendo",
+    "deleteConfirm": "Futa Kumbusho",
+    "deleteConfirmMessage": "Una uhakika unataka kufuta kumbusho hili?",
+    "deleteSuccess": "Kumbusho limefutwa kwa mafanikio"
+  },
+  "templates": {
+    "title": "Vigezo vya Ujumbe",
+    "addNew": "Ongeza Kigezo",
+    "edit": "Hariri Kigezo",
+    "create": "Unda Kigezo",
+    "name": "Jina la Kigezo",
+    "type": "Aina ya Ujumbe",
+    "language": "Lugha",
+    "content": "Maudhui ya Kigezo",
+    "variablesHelp": "Tumia {variableName} kwa maudhui ya kubadilika",
+    "createSuccess": "Kigezo kimeundwa kwa mafanikio",
+    "updateSuccess": "Kigezo kimesasishwa kwa mafanikio",
+    "error": "Hitilafu katika kuhifadhi kigezo"
+  },
+  "messages": {
+    "sendTitle": "Tuma Ujumbe",
+    "selectTemplate": "Chagua Kigezo",
+    "templateContent": "Maudhui ya Kigezo",
+    "send": "Tuma Ujumbe",
+    "sendSuccess": "Ujumbe umetumwa kwa mafanikio",
+    "sendError": "Hitilafu katika kutuma ujumbe"
+  },
+  "channels": {
+    "whatsapp": "WhatsApp",
+    "sms": "SMS",
+    "voice": "Simu ya Sauti"
+  },
+  "priority": {
+    "high": "Juu",
+    "medium": "Wastani",
+    "low": "Chini"
+  },
+  "status": {
+    "pending": "Inasubiri",
+    "completed": "Imekamilika",
+    "overdue": "Imechelewa"
+  },
+  "variables": {
+    "patientName": "Jina la Mgonjwa",
+    "appointmentDate": "Tarehe ya Kipindi",
+    "appointmentTime": "Muda wa Kipindi",
+    "clinicName": "Jina la Kliniki",
+    "doctorName": "Jina la Daktari",
+    "vaccinationName": "Jina la Chanjo",
+    "nextAppointment": "Kipindi Kifuatacho"
   }
 } 

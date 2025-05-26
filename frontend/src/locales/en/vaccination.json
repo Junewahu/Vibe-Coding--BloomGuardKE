@@ -1,0 +1,15 @@
+{
+  "certificate": {
+    "title": "Digital Vaccination Certificate",
+    "subtitle": "Official record of immunizations",
+    "dob": "Date of Birth",
+    "id": "Certificate ID",
+    "issueDate": "Issue Date",
+    "records": "Vaccination Records",
+    "date": "Date",
+    "batch": "Batch Number",
+    "administeredBy": "Administered By",
+    "scanToVerify": "Scan to verify this certificate",
+    "issuingFacility": "Issuing Facility"
+  }
+} 

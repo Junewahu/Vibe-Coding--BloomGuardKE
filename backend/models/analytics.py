@@ -27,12 +27,10 @@ class ReportStatus(str, enum.Enum):
     FAILED = "failed"
 
 class MetricType(str, enum.Enum):
-    COUNT = "count"
-    PERCENTAGE = "percentage"
-    AVERAGE = "average"
-    RATIO = "ratio"
-    TREND = "trend"
-    DISTRIBUTION = "distribution"
+    MESSAGE_DELIVERY = "message_delivery"
+    NHIF_CLAIM = "nhif_claim"
+    PATIENT_ENGAGEMENT = "patient_engagement"
+    FACILITY_PERFORMANCE = "facility_performance"
 
 class DashboardType(str, enum.Enum):
     OVERVIEW = "overview"
@@ -134,4 +132,80 @@ class Alert(Base):
 # Add relationships to User model
 from .user import User
 User.generated_reports = relationship("Report", back_populates="generator")
-User.dashboards = relationship("Dashboard", back_populates="user") 
+User.dashboards = relationship("Dashboard", back_populates="user")
+
+class MessageDeliveryMetrics(Base):
+    __tablename__ = "message_delivery_metrics"
+
+    id = Column(Integer, primary_key=True, index=True)
+    facility_id = Column(Integer, ForeignKey("facilities.id"))
+    date = Column(DateTime, default=datetime.utcnow)
+    channel = Column(String)  # whatsapp, sms, voice
+    total_sent = Column(Integer, default=0)
+    delivered = Column(Integer, default=0)
+    failed = Column(Integer, default=0)
+    pending = Column(Integer, default=0)
+    delivery_rate = Column(Float, default=0.0)
+    average_delivery_time = Column(Float, default=0.0)  # in seconds
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    facility = relationship("Facility", back_populates="message_metrics")
+
+class NHIFClaimMetrics(Base):
+    __tablename__ = "nhif_claim_metrics"
+
+    id = Column(Integer, primary_key=True, index=True)
+    facility_id = Column(Integer, ForeignKey("facilities.id"))
+    date = Column(DateTime, default=datetime.utcnow)
+    total_claims = Column(Integer, default=0)
+    approved_claims = Column(Integer, default=0)
+    rejected_claims = Column(Integer, default=0)
+    pending_claims = Column(Integer, default=0)
+    total_amount_claimed = Column(Float, default=0.0)
+    total_amount_approved = Column(Float, default=0.0)
+    average_processing_time = Column(Float, default=0.0)  # in days
+    approval_rate = Column(Float, default=0.0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    facility = relationship("Facility", back_populates="claim_metrics")
+
+class PatientEngagementMetrics(Base):
+    __tablename__ = "patient_engagement_metrics"
+
+    id = Column(Integer, primary_key=True, index=True)
+    facility_id = Column(Integer, ForeignKey("facilities.id"))
+    date = Column(DateTime, default=datetime.utcnow)
+    total_patients = Column(Integer, default=0)
+    active_patients = Column(Integer, default=0)
+    new_patients = Column(Integer, default=0)
+    returning_patients = Column(Integer, default=0)
+    appointment_attendance_rate = Column(Float, default=0.0)
+    message_response_rate = Column(Float, default=0.0)
+    average_visits_per_patient = Column(Float, default=0.0)
+    patient_satisfaction_score = Column(Float, default=0.0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    facility = relationship("Facility", back_populates="engagement_metrics")
+
+class FacilityPerformanceMetrics(Base):
+    __tablename__ = "facility_performance_metrics"
+
+    id = Column(Integer, primary_key=True, index=True)
+    facility_id = Column(Integer, ForeignKey("facilities.id"))
+    date = Column(DateTime, default=datetime.utcnow)
+    total_appointments = Column(Integer, default=0)
+    completed_appointments = Column(Integer, default=0)
+    cancelled_appointments = Column(Integer, default=0)
+    no_show_appointments = Column(Integer, default=0)
+    average_wait_time = Column(Float, default=0.0)  # in minutes
+    average_consultation_time = Column(Float, default=0.0)  # in minutes
+    revenue = Column(Float, default=0.0)
+    nhif_revenue = Column(Float, default=0.0)
+    cash_revenue = Column(Float, default=0.0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    facility = relationship("Facility", back_populates="performance_metrics") 

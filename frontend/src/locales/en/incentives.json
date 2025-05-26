@@ -1,0 +1,121 @@
+{
+  "title": "Incentives",
+  "summary": "Incentive Summary",
+  "rules": "Incentive Rules",
+  "payments": "Incentive Payments",
+  "types": {
+    "performance": "Performance",
+    "attendance": "Attendance",
+    "patientSatisfaction": "Patient Satisfaction",
+    "qualityCare": "Quality Care"
+  },
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "paid": "Paid"
+  },
+  "periods": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "yearly": "Yearly"
+  },
+  "rules": {
+    "title": "Incentive Rules",
+    "create": "Create Rule",
+    "edit": "Edit Rule",
+    "delete": "Delete Rule",
+    "type": "Rule Type",
+    "target": "Target Value",
+    "baseAmount": "Base Amount",
+    "bonusMultiplier": "Bonus Multiplier",
+    "period": "Period",
+    "active": "Active",
+    "inactive": "Inactive",
+    "validation": {
+      "required": "This field is required",
+      "positive": "Value must be positive",
+      "percentage": "Value must be between 0 and 100"
+    }
+  },
+  "incentives": {
+    "title": "Incentives",
+    "create": "Create Incentive",
+    "edit": "Edit Incentive",
+    "delete": "Delete Incentive",
+    "approve": "Approve Incentive",
+    "reject": "Reject Incentive",
+    "type": "Incentive Type",
+    "period": "Period",
+    "target": "Target Value",
+    "achieved": "Achieved Value",
+    "amount": "Amount",
+    "status": "Status",
+    "notes": "Notes",
+    "validation": {
+      "required": "This field is required",
+      "positive": "Value must be positive",
+      "percentage": "Value must be between 0 and 100"
+    }
+  },
+  "payments": {
+    "title": "Incentive Payments",
+    "create": "Create Payment",
+    "edit": "Edit Payment",
+    "delete": "Delete Payment",
+    "amount": "Amount",
+    "date": "Payment Date",
+    "method": "Payment Method",
+    "reference": "Reference Number",
+    "status": "Status",
+    "notes": "Notes",
+    "validation": {
+      "required": "This field is required",
+      "positive": "Amount must be positive",
+      "reference": "Reference number is required"
+    }
+  },
+  "summary": {
+    "title": "Incentive Summary",
+    "facility": "Facility Summary",
+    "user": "User Summary",
+    "period": "Period",
+    "total": "Total Incentives",
+    "approved": "Approved Incentives",
+    "paid": "Paid Incentives",
+    "pending": "Pending Incentives",
+    "rejected": "Rejected Incentives",
+    "byType": "By Type",
+    "byPeriod": "By Period",
+    "recent": "Recent Incentives",
+    "export": "Export Summary"
+  },
+  "success": {
+    "ruleCreated": "Incentive rule created successfully",
+    "ruleUpdated": "Incentive rule updated successfully",
+    "ruleDeleted": "Incentive rule deleted successfully",
+    "incentiveCreated": "Incentive created successfully",
+    "incentiveUpdated": "Incentive updated successfully",
+    "incentiveDeleted": "Incentive deleted successfully",
+    "incentiveApproved": "Incentive approved successfully",
+    "incentiveRejected": "Incentive rejected successfully",
+    "paymentCreated": "Payment created successfully",
+    "paymentUpdated": "Payment updated successfully",
+    "paymentDeleted": "Payment deleted successfully"
+  },
+  "error": {
+    "ruleCreate": "Failed to create incentive rule",
+    "ruleUpdate": "Failed to update incentive rule",
+    "ruleDelete": "Failed to delete incentive rule",
+    "incentiveCreate": "Failed to create incentive",
+    "incentiveUpdate": "Failed to update incentive",
+    "incentiveDelete": "Failed to delete incentive",
+    "incentiveApprove": "Failed to approve incentive",
+    "incentiveReject": "Failed to reject incentive",
+    "paymentCreate": "Failed to create payment",
+    "paymentUpdate": "Failed to update payment",
+    "paymentDelete": "Failed to delete payment"
+  }
+} 

@@ -1,0 +1,108 @@
+{
+  "title": "Welcome to BloomGuard",
+  "subtitle": "Let's get your clinic set up",
+  "steps": {
+    "clinicInfo": "Clinic Information",
+    "staffSetup": "Staff Setup",
+    "apiConfig": "API Configuration",
+    "review": "Review & Complete"
+  },
+  "clinicInfo": {
+    "title": "Clinic Information",
+    "name": "Clinic Name",
+    "address": "Address",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "license": "Medical License Number",
+    "type": "Clinic Type",
+    "specialties": "Specialties",
+    "operatingHours": "Operating Hours",
+    "capacity": "Patient Capacity",
+    "facilities": "Available Facilities",
+    "insurance": "Accepted Insurance",
+    "nhif": "NHIF Number"
+  },
+  "staffSetup": {
+    "title": "Staff Setup",
+    "addStaff": "Add Staff Member",
+    "role": "Role",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "specialty": "Specialty",
+    "license": "Medical License",
+    "permissions": "Permissions",
+    "roles": {
+      "admin": "Administrator",
+      "doctor": "Doctor",
+      "nurse": "Nurse",
+      "receptionist": "Receptionist",
+      "chw": "Community Health Worker"
+    }
+  },
+  "apiConfig": {
+    "title": "API Configuration",
+    "whatsapp": "WhatsApp Business API",
+    "sms": "SMS Gateway",
+    "voice": "Voice Gateway",
+    "nhif": "NHIF API",
+    "mpesa": "M-PESA API",
+    "apiKey": "API Key",
+    "secret": "API Secret",
+    "testMode": "Test Mode",
+    "webhook": "Webhook URL",
+    "verify": "Verify Connection"
+  },
+  "review": {
+    "title": "Review & Complete",
+    "checkInfo": "Please review your information",
+    "confirm": "I confirm that all information is correct",
+    "complete": "Complete Setup",
+    "success": "Setup completed successfully",
+    "error": "There was an error completing setup"
+  },
+  "buttons": {
+    "next": "Next",
+    "back": "Back",
+    "save": "Save",
+    "complete": "Complete Setup",
+    "verify": "Verify",
+    "test": "Test Connection"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "phone": "Please enter a valid phone number",
+    "license": "Please enter a valid license number",
+    "apiKey": "Please enter a valid API key",
+    "webhook": "Please enter a valid webhook URL"
+  },
+  "success": {
+    "setup": "Clinic setup completed successfully",
+    "staff": "Staff member added successfully",
+    "api": "API configuration verified successfully"
+  },
+  "error": {
+    "setup": "Failed to complete clinic setup",
+    "staff": "Failed to add staff member",
+    "api": "Failed to verify API configuration"
+  },
+  "complete": "Complete",
+  "nhifNumber": "NHIF Number (Optional)",
+  "communicationChannels": "Communication Channels",
+  "integrations": "Integrations",
+  "setupComplete": "Setup Complete!",
+  "setupCompleteMessage": "Your clinic has been successfully set up. You can now start using BloomGuard to manage your pediatric clinic.",
+  "staffForm": {
+    "title": "Add Staff Member",
+    "name": "Full Name",
+    "role": "Role",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "validation": {
+      "required": "All fields are required",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidPhone": "Please enter a valid phone number"
+    }
+  }
+} 

@@ -62,6 +62,21 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     
+    # Communication service settings
+    WHATSAPP_API_KEY: str = ""
+    SMS_API_KEY: str = ""
+    VOICE_API_KEY: str = ""
+    SMS_API_URL: str = "https://api.sms.com/v1"
+    VOICE_API_URL: str = "https://api.voice.com/v1"
+    
+    # NHIF settings
+    NHIF_API_KEY: str = ""
+    NHIF_API_URL: str = "https://api.nhif.or.ke/v1"
+    
+    # Analytics settings
+    ENABLE_ANALYTICS: bool = True
+    ANALYTICS_DB_URL: Optional[str] = None
+    
     class Config:
         case_sensitive = True
         env_file = ".env"

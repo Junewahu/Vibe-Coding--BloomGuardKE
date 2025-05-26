@@ -27,6 +27,26 @@ class AdherenceStatus(str, Enum):
     NON_COMPLIANT = "non_compliant"
     UNKNOWN = "unknown"
 
+class IncentiveType(str, Enum):
+    PERFORMANCE = "performance"
+    ATTENDANCE = "attendance"
+    PATIENT_SATISFACTION = "patient_satisfaction"
+    QUALITY_CARE = "quality_care"
+    SPECIAL_ACHIEVEMENT = "special_achievement"
+
+class IncentiveStatus(str, Enum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    PAID = "paid"
+    REJECTED = "rejected"
+
+class IncentivePeriod(str, Enum):
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+    QUARTERLY = "quarterly"
+    ANNUAL = "annual"
+
 # Reward Schemas
 class RewardBase(BaseModel):
     reward_type: RewardType
@@ -218,4 +238,126 @@ class ProgramStats(BaseModel):
     active_programs: int
     total_enrollments: int
     completion_rate: float
-    average_progress: float 
+    average_progress: float
+
+# Incentive Rule Schemas
+class IncentiveRuleBase(BaseModel):
+    facility_id: int
+    incentive_type: IncentiveType
+    period: IncentivePeriod
+    name: str
+    description: str
+    target_metric: str
+    target_value: float
+    base_amount: float
+    bonus_multiplier: float
+    is_active: bool = True
+    start_date: datetime
+    end_date: Optional[datetime] = None
+
+class IncentiveRuleCreate(IncentiveRuleBase):
+    pass
+
+class IncentiveRuleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    target_metric: Optional[str] = None
+    target_value: Optional[float] = None
+    base_amount: Optional[float] = None
+    bonus_multiplier: Optional[float] = None
+    is_active: Optional[bool] = None
+    end_date: Optional[datetime] = None
+
+class IncentiveRule(IncentiveRuleBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# Incentive Schemas
+class IncentiveBase(BaseModel):
+    facility_id: int
+    user_id: int
+    incentive_type: IncentiveType
+    period: IncentivePeriod
+    start_date: datetime
+    end_date: datetime
+    target_value: float
+    achieved_value: float
+    base_amount: float
+    bonus_amount: float
+    total_amount: float
+    metrics: Dict[str, Any]
+    notes: Optional[str] = None
+
+class IncentiveCreate(IncentiveBase):
+    pass
+
+class IncentiveUpdate(BaseModel):
+    achieved_value: Optional[float] = None
+    bonus_amount: Optional[float] = None
+    total_amount: Optional[float] = None
+    metrics: Optional[Dict[str, Any]] = None
+    notes: Optional[str] = None
+    status: Optional[IncentiveStatus] = None
+
+class Incentive(IncentiveBase):
+    id: int
+    status: IncentiveStatus
+    approved_by: Optional[int] = None
+    approved_at: Optional[datetime] = None
+    payment_date: Optional[datetime] = None
+    payment_reference: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# Incentive Payment Schemas
+class IncentivePaymentBase(BaseModel):
+    incentive_id: int
+    amount: float
+    payment_date: datetime
+    payment_method: str
+    payment_reference: str
+    status: str
+    notes: Optional[str] = None
+
+class IncentivePaymentCreate(IncentivePaymentBase):
+    pass
+
+class IncentivePaymentUpdate(BaseModel):
+    amount: Optional[float] = None
+    payment_date: Optional[datetime] = None
+    payment_method: Optional[str] = None
+    payment_reference: Optional[str] = None
+    status: Optional[str] = None
+    notes: Optional[str] = None
+
+class IncentivePayment(IncentivePaymentBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# Response Schemas
+class IncentiveResponse(BaseModel):
+    success: bool
+    data: Optional[Dict[str, Any]] = None
+    error: Optional[str] = None
+
+class IncentiveSummary(BaseModel):
+    total_incentives: int
+    total_amount: float
+    pending_incentives: int
+    approved_incentives: int
+    paid_incentives: int
+    rejected_incentives: int
+    by_type: Dict[str, int]
+    by_period: Dict[str, int]
+    recent_incentives: List[Incentive] 

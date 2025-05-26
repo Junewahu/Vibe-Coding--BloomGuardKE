@@ -1,0 +1,9 @@
+{
+  "admin": "Administrator",
+  "doctor": "Doctor",
+  "nurse": "Nurse",
+  "receptionist": "Receptionist",
+  "pharmacist": "Pharmacist",
+  "lab_technician": "Lab Technician",
+  "chw": "Community Health Worker"
+} 

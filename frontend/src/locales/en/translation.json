@@ -4,6 +4,9 @@
     "cancel": "Cancel",
     "edit": "Edit",
     "delete": "Delete",
+    "create": "Create",
+    "update": "Update",
+    "actions": "Actions",
     "confirm": "Confirm",
     "back": "Back",
     "next": "Next",
@@ -166,5 +169,68 @@
     "profile": "Profile",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "reminders": {
+    "title": "Reminders",
+    "addReminder": "Add Reminder",
+    "searchPlaceholder": "Search reminders...",
+    "activeReminders": "Active Reminders",
+    "templates": "Message Templates",
+    "sentMessages": "Sent Messages",
+    "patient": "Patient",
+    "date": "Date",
+    "time": "Time",
+    "priority": "Priority",
+    "status": "Status",
+    "actions": "Actions",
+    "deleteConfirm": "Delete Reminder",
+    "deleteConfirmMessage": "Are you sure you want to delete this reminder?",
+    "deleteSuccess": "Reminder deleted successfully"
+  },
+  "templates": {
+    "title": "Message Templates",
+    "addNew": "Add Template",
+    "edit": "Edit Template",
+    "create": "Create Template",
+    "name": "Template Name",
+    "type": "Message Type",
+    "language": "Language",
+    "content": "Template Content",
+    "variablesHelp": "Use {variableName} for dynamic content",
+    "createSuccess": "Template created successfully",
+    "updateSuccess": "Template updated successfully",
+    "error": "Error saving template"
+  },
+  "messages": {
+    "sendTitle": "Send Message",
+    "selectTemplate": "Select Template",
+    "templateContent": "Template Content",
+    "send": "Send Message",
+    "sendSuccess": "Message sent successfully",
+    "sendError": "Error sending message"
+  },
+  "channels": {
+    "whatsapp": "WhatsApp",
+    "sms": "SMS",
+    "voice": "Voice Call"
+  },
+  "priority": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "status": {
+    "pending": "Pending",
+    "completed": "Completed",
+    "overdue": "Overdue"
+  },
+  "variables": {
+    "patientName": "Patient Name",
+    "appointmentDate": "Appointment Date",
+    "appointmentTime": "Appointment Time",
+    "clinicName": "Clinic Name",
+    "doctorName": "Doctor Name",
+    "vaccinationName": "Vaccination Name",
+    "nextAppointment": "Next Appointment"
   }
 } 

@@ -1,315 +1,240 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from ..database import get_db
-from ..services.incentives import IncentivesService
+from ..services.incentive_service import IncentiveService
 from ..schemas.incentives import (
-    RewardCreate,
-    RewardUpdate,
-    RewardResponse,
-    AchievementCreate,
-    AchievementUpdate,
-    AchievementResponse,
-    AdherenceTrackingCreate,
-    AdherenceTrackingUpdate,
-    AdherenceTrackingResponse,
-    AdherenceCheckCreate,
-    AdherenceCheckResponse,
-    IncentiveProgramCreate,
-    IncentiveProgramUpdate,
-    IncentiveProgramResponse,
-    ProgramEnrollmentCreate,
-    ProgramEnrollmentUpdate,
-    ProgramEnrollmentResponse,
-    RewardStats,
-    AchievementStats,
-    AdherenceStats,
-    ProgramStats
+    Incentive,
+    IncentiveCreate,
+    IncentiveUpdate,
+    IncentiveRule,
+    IncentiveRuleCreate,
+    IncentiveRuleUpdate,
+    IncentivePayment,
+    IncentivePaymentCreate,
+    IncentivePaymentUpdate,
+    IncentiveResponse,
+    IncentiveSummary
 )
 from ..auth import get_current_user
-from ..models.incentives import RewardType, AchievementType, AdherenceStatus
 
 router = APIRouter(
     prefix="/incentives",
-    tags=["incentives"],
-    dependencies=[Depends(get_current_user)]
+    tags=["incentives"]
 )
 
-# Reward Endpoints
-@router.post("/rewards", response_model=RewardResponse)
-async def create_reward(
-    reward_data: RewardCreate,
+# Incentive Rule Endpoints
+@router.post("/rules", response_model=IncentiveRule)
+def create_incentive_rule(
+    rule: IncentiveRuleCreate,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Create a new reward."""
-    try:
-        service = IncentivesService(db)
-        return await service.create_reward(reward_data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Create a new incentive rule."""
+    service = IncentiveService(db)
+    return service.create_incentive_rule(rule)
 
-@router.put("/rewards/{reward_id}", response_model=RewardResponse)
-async def update_reward(
-    reward_id: int,
-    reward_data: RewardUpdate,
+@router.get("/rules", response_model=List[IncentiveRule])
+def get_incentive_rules(
+    facility_id: int,
+    is_active: Optional[bool] = None,
+    skip: int = 0,
+    limit: int = 100,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Update a reward."""
-    try:
-        service = IncentivesService(db)
-        return await service.update_reward(reward_id, reward_data)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Get all incentive rules for a facility."""
+    service = IncentiveService(db)
+    return service.get_incentive_rules(facility_id, skip, limit, is_active)
 
-@router.get("/rewards", response_model=List[RewardResponse])
-async def get_rewards(
-    reward_type: Optional[RewardType] = None,
+@router.get("/rules/{rule_id}", response_model=IncentiveRule)
+def get_incentive_rule(
+    rule_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    """Get a specific incentive rule."""
+    service = IncentiveService(db)
+    rule = service.get_incentive_rule(rule_id)
+    if not rule:
+        raise HTTPException(status_code=404, detail="Incentive rule not found")
+    return rule
+
+@router.put("/rules/{rule_id}", response_model=IncentiveRule)
+def update_incentive_rule(
+    rule_id: int,
+    rule: IncentiveRuleUpdate,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    """Update an incentive rule."""
+    service = IncentiveService(db)
+    updated_rule = service.update_incentive_rule(rule_id, rule)
+    if not updated_rule:
+        raise HTTPException(status_code=404, detail="Incentive rule not found")
+    return updated_rule
+
+# Incentive Endpoints
+@router.post("/calculate", response_model=Incentive)
+def calculate_incentive(
+    facility_id: int,
+    user_id: int,
+    incentive_type: str,
+    start_date: datetime,
+    end_date: datetime,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    """Calculate an incentive for a user."""
+    service = IncentiveService(db)
+    
+    if incentive_type == "performance":
+        incentive = service.calculate_performance_incentive(facility_id, user_id, start_date, end_date)
+    elif incentive_type == "attendance":
+        incentive = service.calculate_attendance_incentive(facility_id, user_id, start_date, end_date)
+    elif incentive_type == "patient_satisfaction":
+        incentive = service.calculate_patient_satisfaction_incentive(facility_id, user_id, start_date, end_date)
+    elif incentive_type == "quality_care":
+        incentive = service.calculate_quality_care_incentive(facility_id, user_id, start_date, end_date)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid incentive type")
+    
+    if not incentive:
+        raise HTTPException(status_code=404, detail="No applicable incentive rule found")
+    return incentive
+
+@router.get("/", response_model=List[Incentive])
+def get_incentives(
+    facility_id: int,
+    user_id: Optional[int] = None,
     status: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 100,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Get rewards with optional filters."""
-    try:
-        service = IncentivesService(db)
-        return await service.get_rewards(
-            chw_id=current_user.id,
-            reward_type=reward_type,
-            status=status
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Get all incentives for a facility."""
+    service = IncentiveService(db)
+    return service.get_incentives(facility_id, user_id, status, skip, limit)
 
-# Achievement Endpoints
-@router.post("/achievements", response_model=AchievementResponse)
-async def create_achievement(
-    achievement_data: AchievementCreate,
+@router.get("/{incentive_id}", response_model=Incentive)
+def get_incentive(
+    incentive_id: int,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Create a new achievement."""
-    try:
-        service = IncentivesService(db)
-        return await service.create_achievement(achievement_data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Get a specific incentive."""
+    service = IncentiveService(db)
+    incentive = service.get_incentive(incentive_id)
+    if not incentive:
+        raise HTTPException(status_code=404, detail="Incentive not found")
+    return incentive
 
-@router.put("/achievements/{achievement_id}", response_model=AchievementResponse)
-async def update_achievement(
-    achievement_id: int,
-    achievement_data: AchievementUpdate,
+@router.put("/{incentive_id}", response_model=Incentive)
+def update_incentive(
+    incentive_id: int,
+    incentive: IncentiveUpdate,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Update an achievement."""
-    try:
-        service = IncentivesService(db)
-        return await service.update_achievement(achievement_id, achievement_data)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Update an incentive."""
+    service = IncentiveService(db)
+    updated_incentive = service.update_incentive(incentive_id, incentive)
+    if not updated_incentive:
+        raise HTTPException(status_code=404, detail="Incentive not found")
+    return updated_incentive
 
-@router.get("/achievements", response_model=List[AchievementResponse])
-async def get_achievements(
-    achievement_type: Optional[AchievementType] = None,
-    is_completed: Optional[bool] = None,
+@router.post("/{incentive_id}/approve", response_model=Incentive)
+def approve_incentive(
+    incentive_id: int,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Get achievements with optional filters."""
-    try:
-        service = IncentivesService(db)
-        return await service.get_achievements(
-            chw_id=current_user.id,
-            achievement_type=achievement_type,
-            is_completed=is_completed
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Approve an incentive."""
+    service = IncentiveService(db)
+    incentive = service.approve_incentive(incentive_id, current_user.id)
+    if not incentive:
+        raise HTTPException(status_code=404, detail="Incentive not found")
+    return incentive
 
-# Adherence Tracking Endpoints
-@router.post("/adherence", response_model=AdherenceTrackingResponse)
-async def create_adherence_tracking(
-    tracking_data: AdherenceTrackingCreate,
+@router.post("/{incentive_id}/reject", response_model=Incentive)
+def reject_incentive(
+    incentive_id: int,
+    notes: str,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Create a new adherence tracking record."""
-    try:
-        service = IncentivesService(db)
-        return await service.create_adherence_tracking(tracking_data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Reject an incentive."""
+    service = IncentiveService(db)
+    incentive = service.reject_incentive(incentive_id, current_user.id, notes)
+    if not incentive:
+        raise HTTPException(status_code=404, detail="Incentive not found")
+    return incentive
 
-@router.put("/adherence/{tracking_id}", response_model=AdherenceTrackingResponse)
-async def update_adherence_tracking(
-    tracking_id: int,
-    tracking_data: AdherenceTrackingUpdate,
+# Incentive Payment Endpoints
+@router.post("/{incentive_id}/payments", response_model=IncentivePayment)
+def create_incentive_payment(
+    incentive_id: int,
+    payment: IncentivePaymentCreate,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Update an adherence tracking record."""
-    try:
-        service = IncentivesService(db)
-        return await service.update_adherence_tracking(tracking_id, tracking_data)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Create a payment for an incentive."""
+    service = IncentiveService(db)
+    payment_record = service.process_incentive_payment(
+        incentive_id,
+        payment.payment_date,
+        payment.payment_method,
+        payment.payment_reference,
+        payment.notes
+    )
+    if not payment_record:
+        raise HTTPException(status_code=404, detail="Incentive not found or not approved")
+    return payment_record
 
-@router.post("/adherence/checks", response_model=AdherenceCheckResponse)
-async def create_adherence_check(
-    check_data: AdherenceCheckCreate,
+@router.get("/{incentive_id}/payments", response_model=List[IncentivePayment])
+def get_incentive_payments(
+    incentive_id: int,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Create a new adherence check."""
-    try:
-        service = IncentivesService(db)
-        return await service.create_adherence_check(check_data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Get all payments for an incentive."""
+    service = IncentiveService(db)
+    return service.get_incentive_payments(incentive_id)
 
-@router.get("/adherence", response_model=List[AdherenceTrackingResponse])
-async def get_adherence_tracking(
-    patient_id: Optional[int] = None,
-    status: Optional[AdherenceStatus] = None,
+# Analytics Endpoints
+@router.get("/summary/facility/{facility_id}", response_model=IncentiveSummary)
+def get_facility_incentive_summary(
+    facility_id: int,
+    start_date: datetime = Query(default=None),
+    end_date: datetime = Query(default=None),
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Get adherence tracking records with optional filters."""
-    try:
-        service = IncentivesService(db)
-        return await service.get_adherence_tracking(
-            patient_id=patient_id,
-            chw_id=current_user.id,
-            status=status
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    """Get incentive summary for a facility."""
+    if not start_date:
+        start_date = datetime.utcnow() - timedelta(days=30)
+    if not end_date:
+        end_date = datetime.utcnow()
+    
+    service = IncentiveService(db)
+    return service.get_incentive_summary(facility_id, start_date, end_date)
 
-# Incentive Program Endpoints
-@router.post("/programs", response_model=IncentiveProgramResponse)
-async def create_incentive_program(
-    program_data: IncentiveProgramCreate,
+@router.get("/summary/user/{user_id}", response_model=IncentiveSummary)
+def get_user_incentive_summary(
+    user_id: int,
+    start_date: datetime = Query(default=None),
+    end_date: datetime = Query(default=None),
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Create a new incentive program."""
-    try:
-        service = IncentivesService(db)
-        return await service.create_incentive_program(program_data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@router.put("/programs/{program_id}", response_model=IncentiveProgramResponse)
-async def update_incentive_program(
-    program_id: int,
-    program_data: IncentiveProgramUpdate,
-    db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
-):
-    """Update an incentive program."""
-    try:
-        service = IncentivesService(db)
-        return await service.update_incentive_program(program_id, program_data)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@router.post("/programs/enroll", response_model=ProgramEnrollmentResponse)
-async def enroll_in_program(
-    enrollment_data: ProgramEnrollmentCreate,
-    db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
-):
-    """Enroll a CHW in an incentive program."""
-    try:
-        service = IncentivesService(db)
-        return await service.enroll_in_program(enrollment_data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@router.put("/programs/enrollments/{enrollment_id}", response_model=ProgramEnrollmentResponse)
-async def update_enrollment(
-    enrollment_id: int,
-    enrollment_data: ProgramEnrollmentUpdate,
-    db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
-):
-    """Update a program enrollment."""
-    try:
-        service = IncentivesService(db)
-        return await service.update_enrollment(enrollment_id, enrollment_data)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-# Statistics Endpoints
-@router.get("/stats/rewards", response_model=RewardStats)
-async def get_reward_stats(
-    db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
-):
-    """Get reward statistics."""
-    try:
-        service = IncentivesService(db)
-        return await service.get_reward_stats(current_user.id)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@router.get("/stats/achievements", response_model=AchievementStats)
-async def get_achievement_stats(
-    db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
-):
-    """Get achievement statistics."""
-    try:
-        service = IncentivesService(db)
-        return await service.get_achievement_stats(current_user.id)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@router.get("/stats/adherence", response_model=AdherenceStats)
-async def get_adherence_stats(
-    start_date: Optional[datetime] = None,
-    end_date: Optional[datetime] = None,
-    db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
-):
-    """Get adherence statistics."""
-    try:
-        service = IncentivesService(db)
-        return await service.get_adherence_stats(
-            current_user.id,
-            start_date,
-            end_date
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@router.get("/stats/programs", response_model=ProgramStats)
-async def get_program_stats(
-    start_date: Optional[datetime] = None,
-    end_date: Optional[datetime] = None,
-    db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
-):
-    """Get program statistics."""
-    try:
-        service = IncentivesService(db)
-        return await service.get_program_stats(
-            current_user.id,
-            start_date,
-            end_date
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e)) 
+    """Get incentive summary for a user."""
+    if not start_date:
+        start_date = datetime.utcnow() - timedelta(days=30)
+    if not end_date:
+        end_date = datetime.utcnow()
+    
+    service = IncentiveService(db)
+    return service.get_user_incentive_summary(user_id, start_date, end_date) 

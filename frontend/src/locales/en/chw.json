@@ -1,0 +1,20 @@
+{
+  "online": "Online",
+  "offline": "Offline",
+  "lastSync": "Last Sync",
+  "pendingSync": "Pending Sync",
+  "address": "Address",
+  "scheduledDate": "Scheduled Date",
+  "markComplete": "Mark Complete",
+  "locationError": "Location access is required to complete tasks",
+  "taskType": {
+    "visit": "Home Visit",
+    "follow-up": "Follow-up",
+    "education": "Health Education"
+  },
+  "status": {
+    "pending": "Pending",
+    "in-progress": "In Progress",
+    "completed": "Completed"
+  }
+} 

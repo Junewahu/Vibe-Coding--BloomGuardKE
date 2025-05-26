@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   Button,
   TextField,
@@ -31,6 +29,8 @@ import {
   FormControlLabel,
   useTheme,
   Paper,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -47,6 +47,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../components/NotificationSystem';
+import MessageTemplateManager from '../components/reminders/MessageTemplateManager';
+import MessageSender from '../components/reminders/MessageSender';
 
 interface Reminder {
   id: number;
@@ -57,6 +59,29 @@ interface Reminder {
   priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'completed' | 'overdue';
   patientName?: string;
+  patientPhone?: string;
+}
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`reminder-tabpanel-${index}`}
+      aria-labelledby={`reminder-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
 }
 
 const Reminders: React.FC = () => {
@@ -72,6 +97,7 @@ const Reminders: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [tabValue, setTabValue] = useState(0);
 
   // Mock data - replace with actual API calls
   const reminders: Reminder[] = [
@@ -84,6 +110,7 @@ const Reminders: React.FC = () => {
       priority: 'high',
       status: 'pending',
       patientName: 'John Doe',
+      patientPhone: '+254712345678',
     },
     {
       id: 2,
@@ -94,8 +121,8 @@ const Reminders: React.FC = () => {
       priority: 'medium',
       status: 'pending',
       patientName: 'Jane Smith',
+      patientPhone: '+254712345679',
     },
-    // Add more mock reminders as needed
   ];
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -147,6 +174,10 @@ const Reminders: React.FC = () => {
     }
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
@@ -173,19 +204,6 @@ const Reminders: React.FC = () => {
     }
   };
 
-  const getNotificationIcon = (method: string) => {
-    switch (method) {
-      case 'sms':
-        return <NotificationsIcon />;
-      case 'email':
-        return <NotificationsActiveIcon />;
-      case 'both':
-        return <NotificationsOffIcon />;
-      default:
-        return <NotificationsIcon />;
-    }
-  };
-
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
@@ -193,17 +211,24 @@ const Reminders: React.FC = () => {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
-          onClick={() => navigate('/reminders/new')}
+          onClick={handleAddReminder}
         >
           {t('reminders.addReminder')}
         </Button>
       </Box>
 
-      <Card sx={{ mb: 4 }}>
-        <CardContent>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={tabValue} onChange={handleTabChange}>
+          <Tab label={t('reminders.activeReminders')} />
+          <Tab label={t('reminders.templates')} />
+          <Tab label={t('reminders.sentMessages')} />
+        </Tabs>
+      </Box>
+
+      <TabPanel value={tabValue} index={0}>
+        <Box sx={{ mb: 3 }}>
           <TextField
             fullWidth
-            variant="outlined"
             placeholder={t('reminders.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -213,210 +238,127 @@ const Reminders: React.FC = () => {
                   <SearchIcon />
                 </InputAdornment>
               ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleFilterClick}>
+                    <FilterListIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
             }}
           />
-        </CardContent>
-      </Card>
+        </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('reminders.title')}</TableCell>
-              <TableCell>{t('reminders.description')}</TableCell>
-              <TableCell>{t('reminders.date')}</TableCell>
-              <TableCell>{t('reminders.time')}</TableCell>
-              <TableCell>{t('reminders.priority')}</TableCell>
-              <TableCell>{t('reminders.status')}</TableCell>
-              <TableCell>{t('reminders.patient')}</TableCell>
-              <TableCell>{t('common.actions')}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {reminders.map((reminder: Reminder) => (
-              <TableRow key={reminder.id}>
-                <TableCell>{reminder.title}</TableCell>
-                <TableCell>{reminder.description}</TableCell>
-                <TableCell>{reminder.date}</TableCell>
-                <TableCell>{reminder.time}</TableCell>
-                <TableCell>
-                  <Chip
-                    label={t(`reminders.priorities.${reminder.priority}`)}
-                    size="small"
-                    sx={{
-                      bgcolor: getPriorityColor(reminder.priority),
-                      color: theme.palette.common.white,
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    label={t(`reminders.statuses.${reminder.status}`)}
-                    size="small"
-                    sx={{
-                      bgcolor: getStatusColor(reminder.status),
-                      color: theme.palette.common.white,
-                    }}
-                  />
-                </TableCell>
-                <TableCell>{reminder.patientName}</TableCell>
-                <TableCell>
-                  <IconButton
-                    size="small"
-                    onClick={(e) => handleMenuClick(e, reminder)}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleDeleteClick(reminder)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>{t('reminders.title')}</TableCell>
+                <TableCell>{t('reminders.patient')}</TableCell>
+                <TableCell>{t('reminders.date')}</TableCell>
+                <TableCell>{t('reminders.time')}</TableCell>
+                <TableCell>{t('reminders.priority')}</TableCell>
+                <TableCell>{t('reminders.status')}</TableCell>
+                <TableCell>{t('reminders.actions')}</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {reminders
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((reminder) => (
+                  <TableRow key={reminder.id}>
+                    <TableCell>{reminder.title}</TableCell>
+                    <TableCell>{reminder.patientName}</TableCell>
+                    <TableCell>{reminder.date}</TableCell>
+                    <TableCell>{reminder.time}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={t(`priority.${reminder.priority}`)}
+                        size="small"
+                        sx={{
+                          backgroundColor: getPriorityColor(reminder.priority),
+                          color: theme.palette.common.white,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={t(`status.${reminder.status}`)}
+                        size="small"
+                        sx={{
+                          backgroundColor: getStatusColor(reminder.status),
+                          color: theme.palette.common.white,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleMenuClick(e, reminder)}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={reminders.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </TableContainer>
+      </TabPanel>
 
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={reminders.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <TabPanel value={tabValue} index={1}>
+        <MessageTemplateManager />
+      </TabPanel>
 
-      {/* Reminder Actions Menu */}
+      <TabPanel value={tabValue} index={2}>
+        <Grid container spacing={3}>
+          {reminders.map((reminder) => (
+            <Grid item xs={12} md={6} key={reminder.id}>
+              <MessageSender
+                patientPhone={reminder.patientPhone || ''}
+                patientName={reminder.patientName || ''}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </TabPanel>
+
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>{t('reminders.viewDetails')}</MenuItem>
-        <MenuItem onClick={handleMenuClose}>{t('reminders.edit')}</MenuItem>
-        <MenuItem onClick={handleMenuClose}>{t('reminders.resend')}</MenuItem>
-        <MenuItem onClick={handleMenuClose}>{t('reminders.markAsCompleted')}</MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <EditIcon sx={{ mr: 1 }} />
+          {t('common.edit')}
+        </MenuItem>
+        <MenuItem onClick={() => handleDeleteClick(selectedReminder!)}>
+          <DeleteIcon sx={{ mr: 1 }} />
+          {t('common.delete')}
+        </MenuItem>
       </Menu>
 
-      {/* Filter Menu */}
-      <Menu
-        anchorEl={filterAnchorEl}
-        open={Boolean(filterAnchorEl)}
-        onClose={handleFilterClose}
-      >
-        <MenuItem onClick={handleFilterClose}>{t('reminders.filterByStatus')}</MenuItem>
-        <MenuItem onClick={handleFilterClose}>{t('reminders.filterByPriority')}</MenuItem>
-        <MenuItem onClick={handleFilterClose}>{t('reminders.filterByType')}</MenuItem>
-      </Menu>
-
-      {/* Add Reminder Dialog */}
-      <Dialog open={openDialog} onClose={handleDialogClose} maxWidth="md" fullWidth>
-        <DialogTitle>{t('reminders.addNewReminder')}</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={3} sx={{ mt: 1 }}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label={t('reminders.patient')}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>{t('reminders.type')}</InputLabel>
-                <Select
-                  label={t('reminders.type')}
-                  defaultValue=""
-                >
-                  <MenuItem value="vaccination">{t('reminders.type.vaccination')}</MenuItem>
-                  <MenuItem value="checkup">{t('reminders.type.checkup')}</MenuItem>
-                  <MenuItem value="medication">{t('reminders.type.medication')}</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label={t('reminders.dueDate')}
-                type="date"
-                variant="outlined"
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel>{t('reminders.priority')}</InputLabel>
-                <Select
-                  label={t('reminders.priority')}
-                  defaultValue=""
-                >
-                  <MenuItem value="high">{t('reminders.priority.high')}</MenuItem>
-                  <MenuItem value="medium">{t('reminders.priority.medium')}</MenuItem>
-                  <MenuItem value="low">{t('reminders.priority.low')}</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel>{t('reminders.notificationMethod')}</InputLabel>
-                <Select
-                  label={t('reminders.notificationMethod')}
-                  defaultValue=""
-                >
-                  <MenuItem value="sms">{t('reminders.notificationMethod.sms')}</MenuItem>
-                  <MenuItem value="email">{t('reminders.notificationMethod.email')}</MenuItem>
-                  <MenuItem value="both">{t('reminders.notificationMethod.both')}</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Switch defaultChecked />}
-                label={t('reminders.recurring')}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label={t('reminders.notes')}
-                variant="outlined"
-                multiline
-                rows={3}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose}>{t('common.cancel')}</Button>
-          <Button variant="contained" onClick={handleDialogClose}>
-            {t('common.save')}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
         <DialogTitle>{t('reminders.deleteConfirm')}</DialogTitle>
         <DialogContent>
           <Typography>
-            {selectedReminder?.title} - {selectedReminder?.date} {selectedReminder?.time}
+            {t('reminders.deleteConfirmMessage')}
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)}>
             {t('common.cancel')}
           </Button>
-          <Button
-            onClick={handleDeleteConfirm}
-            color="error"
-            variant="contained"
-          >
+          <Button onClick={handleDeleteConfirm} color="error">
             {t('common.delete')}
           </Button>
         </DialogActions>

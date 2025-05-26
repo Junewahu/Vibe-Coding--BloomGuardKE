@@ -33,35 +33,74 @@ declare module '@mui/material/styles' {
 // Common theme configuration
 const commonTheme = {
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Inter", "Nunito", "Poppins", sans-serif',
     h1: {
+      fontSize: '2.5rem',
       fontWeight: 700,
     },
     h2: {
+      fontSize: '2rem',
       fontWeight: 600,
     },
     h3: {
+      fontSize: '1.75rem',
       fontWeight: 600,
+    },
+    h4: {
+      fontSize: '1.5rem',
+      fontWeight: 600,
+    },
+    h5: {
+      fontSize: '1.25rem',
+      fontWeight: 600,
+    },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 600,
+    },
+    body1: {
+      fontSize: '1rem',
+      lineHeight: 1.5,
+    },
+    body2: {
+      fontSize: '0.875rem',
+      lineHeight: 1.5,
     },
     button: {
       textTransform: 'none',
     },
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 16,
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
+          textTransform: 'none',
           borderRadius: 8,
+          padding: '8px 16px',
+        },
+        contained: {
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+          },
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
+          borderRadius: 16,
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.05)',
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
         },
       },
     },
@@ -92,24 +131,33 @@ const lightTheme: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#2563eb',
-      light: '#60a5fa',
-      dark: '#1d4ed8',
-      contrastText: '#ffffff',
+      main: '#A2D2FF',
+      light: '#BDE0FE',
+      dark: '#22223B',
+      contrastText: '#22223B',
     },
     secondary: {
-      main: '#7c3aed',
-      light: '#a78bfa',
-      dark: '#5b21b6',
-      contrastText: '#ffffff',
+      main: '#FFAFCC',
+      light: '#FFC8DD',
+      dark: '#CDB4DB',
+      contrastText: '#22223B',
     },
     background: {
-      default: '#f8fafc',
-      paper: '#ffffff',
+      default: '#BDE0FE',
+      paper: '#FFFFFF',
     },
     text: {
-      primary: '#1e293b',
-      secondary: '#64748b',
+      primary: '#22223B',
+      secondary: '#343A40',
+    },
+    error: {
+      main: '#FF6B6B',
+    },
+    warning: {
+      main: '#FFD93D',
+    },
+    success: {
+      main: '#6BCB77',
     },
   },
 };
@@ -138,6 +186,15 @@ const darkTheme: ThemeOptions = {
     text: {
       primary: '#f1f5f9',
       secondary: '#94a3b8',
+    },
+    error: {
+      main: '#FF6B6B',
+    },
+    warning: {
+      main: '#FFD93D',
+    },
+    success: {
+      main: '#6BCB77',
     },
   },
 };
@@ -187,4 +244,6 @@ export const zIndex = {
   modal: 1300,
   snackbar: 1400,
   tooltip: 1500,
-}; 
+};
+
+export default createAppTheme('light'); 

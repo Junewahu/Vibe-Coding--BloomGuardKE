@@ -136,4 +136,99 @@ class ProgramEnrollment(Base):
 
     # Relationships
     program = relationship("IncentiveProgram")
-    chw = relationship("User", back_populates="program_enrollments") 
+    chw = relationship("User", back_populates="program_enrollments")
+
+class IncentiveType(str, enum.Enum):
+    PERFORMANCE = "performance"
+    ATTENDANCE = "attendance"
+    PATIENT_SATISFACTION = "patient_satisfaction"
+    QUALITY_CARE = "quality_care"
+    SPECIAL_ACHIEVEMENT = "special_achievement"
+
+class IncentiveStatus(str, enum.Enum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    PAID = "paid"
+    REJECTED = "rejected"
+
+class IncentivePeriod(str, enum.Enum):
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+    QUARTERLY = "quarterly"
+    ANNUAL = "annual"
+
+class Incentive(Base):
+    __tablename__ = "incentives"
+
+    id = Column(Integer, primary_key=True, index=True)
+    facility_id = Column(Integer, ForeignKey("facilities.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    incentive_type = Column(Enum(IncentiveType))
+    period = Column(Enum(IncentivePeriod))
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
+    target_value = Column(Float)
+    achieved_value = Column(Float)
+    base_amount = Column(Float)
+    bonus_amount = Column(Float)
+    total_amount = Column(Float)
+    status = Column(Enum(IncentiveStatus), default=IncentiveStatus.PENDING)
+    metrics = Column(JSON)  # Store detailed metrics that contributed to the incentive
+    notes = Column(String, nullable=True)
+    approved_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    approved_at = Column(DateTime, nullable=True)
+    payment_date = Column(DateTime, nullable=True)
+    payment_reference = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    facility = relationship("Facility", back_populates="incentives")
+    user = relationship("User", foreign_keys=[user_id], back_populates="earned_incentives")
+    approver = relationship("User", foreign_keys=[approved_by], back_populates="approved_incentives")
+
+class IncentiveRule(Base):
+    __tablename__ = "incentive_rules"
+
+    id = Column(Integer, primary_key=True, index=True)
+    facility_id = Column(Integer, ForeignKey("facilities.id"))
+    incentive_type = Column(Enum(IncentiveType))
+    period = Column(Enum(IncentivePeriod))
+    name = Column(String)
+    description = Column(String)
+    target_metric = Column(String)  # e.g., "patient_satisfaction_score", "appointment_completion_rate"
+    target_value = Column(Float)
+    base_amount = Column(Float)
+    bonus_multiplier = Column(Float)  # Multiplier for exceeding target
+    is_active = Column(Boolean, default=True)
+    start_date = Column(DateTime)
+    end_date = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    facility = relationship("Facility", back_populates="incentive_rules")
+
+class IncentivePayment(Base):
+    __tablename__ = "incentive_payments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    incentive_id = Column(Integer, ForeignKey("incentives.id"))
+    amount = Column(Float)
+    payment_date = Column(DateTime)
+    payment_method = Column(String)  # e.g., "bank_transfer", "mobile_money", "cash"
+    payment_reference = Column(String)
+    status = Column(String)  # e.g., "pending", "completed", "failed"
+    notes = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    incentive = relationship("Incentive", back_populates="payments")
+
+# Add relationships to existing models
+from .user import User
+User.earned_incentives = relationship("Incentive", foreign_keys="[Incentive.user_id]", back_populates="user")
+User.approved_incentives = relationship("Incentive", foreign_keys="[Incentive.approved_by]", back_populates="approver")
+
+from .facility import Facility
+Facility.incentives = relationship("Incentive", back_populates="facility")
+Facility.incentive_rules = relationship("IncentiveRule", back_populates="facility") 
